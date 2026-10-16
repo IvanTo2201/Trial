@@ -1,0 +1,9 @@
+{
+  "name": "尋味嶺南：非遺小吃造物局",
+  "short_name": "尋味嶺南",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#FAF5E8",
+  "theme_color": "#3B1F14",
+  "description": "透過手機感應器、AR 實戰與 AI 視覺評分，親手掌握 12 款港粵同源嶺南名小吃"
+}

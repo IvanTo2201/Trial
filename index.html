@@ -1,0 +1,3740 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>尋味嶺南：非遺小吃造物局 | 港粵同源・四大非遺工藝互動學習平台</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cinnabar: #9E2A2B;
+      --amber: #D97706;
+      --gold: #F59E0B;
+      --jade: #15803D;
+      --rice: #FFFDF7;
+      --parchment: #FBF6EA;
+      --wood: #4A2C1D;
+    }
+    body {
+      font-family: 'Noto Sans TC', 'Inter', sans-serif;
+      background-color: #FAF5E8;
+      color: #291D16;
+      overflow-x: hidden;
+    }
+    .font-serif-tc {
+      font-family: 'Noto Serif TC', serif;
+    }
+    .bg-lingnan-pattern {
+      background-color: #FAF5E8;
+      background-image: radial-gradient(#D97706 0.6px, transparent 0.6px), radial-gradient(#9E2A2B 0.6px, #FAF5E8 0.6px);
+      background-size: 28px 28px;
+      background-position: 0 0, 14px 14px;
+    }
+    .wood-card {
+      background: linear-gradient(145deg, #FFFDF9 0%, #F7EFE0 100%);
+      border: 1px solid #E5D3B3;
+      box-shadow: 0 8px 24px -6px rgba(74, 44, 29, 0.12);
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #F3E9D2;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #C49A6C;
+      border-radius: 9999px;
+    }
+    canvas {
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    @keyframes pulse-soft {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+    .animate-pulse-soft {
+      animation: pulse-soft 2.4s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-lingnan-pattern text-stone-900">
+
+  <!-- Toast Notification -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm pointer-events-none"></div>
+
+  <!-- Top Navigation Header -->
+  <header class="sticky top-0 z-40 bg-[#3B1F14]/95 backdrop-blur-md text-amber-50 border-b border-amber-700/40 shadow-lg">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-2">
+      <!-- Brand Logo & Title -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-red-800 flex items-center justify-center shadow-inner border border-amber-300/40 font-serif-tc font-black text-xl text-white">
+          嶺
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-serif-tc font-bold text-base sm:text-lg tracking-wide text-amber-100">尋味嶺南：非遺小吃造物局</h1>
+            <span class="hidden md:inline-block text-[11px] bg-red-800/90 text-amber-200 px-2 py-0.5 rounded-full border border-amber-400/30">港粵同源・四大非遺工藝</span>
+          </div>
+          <p class="text-[11px] text-amber-300/80 hidden sm:block">透過手機感應器、AR 實戰與 AI 視覺評分，親手掌握 12 款嶺南名小吃</p>
+        </div>
+      </div>
+
+      <!-- Progress, Sound & Demo Controls -->
+      <div class="flex items-center gap-2">
+        <div class="bg-stone-900/80 border border-amber-500/30 rounded-lg px-2.5 py-1 flex items-center gap-2 text-xs">
+          <span class="text-amber-300 font-medium">匠人修煉：</span>
+          <span id="headerProgressText" class="font-bold text-white">0 / 4 工坊</span>
+          <span class="text-amber-400 font-bold" id="headerStarCount">⭐ 0</span>
+        </div>
+        <button id="btnToggleSound" type="button" class="px-2.5 py-1.5 rounded-lg bg-amber-900/60 hover:bg-amber-800 text-amber-100 border border-amber-600/40 text-xs flex items-center gap-1 transition" title="切換音效">
+          <span id="soundIcon">🔊</span>
+          <span class="hidden sm:inline" id="soundLabel">音效開啟</span>
+        </button>
+        <button id="btnJudgeDemo" type="button" class="px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-red-700 hover:from-amber-400 hover:to-red-600 text-white font-semibold text-xs shadow-sm transition">
+          ⚡ 評審一鍵體驗全滿分
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Navigation Tabs -->
+    <nav class="bg-[#2B150D] border-t border-amber-900/50">
+      <div class="max-w-7xl mx-auto px-2 sm:px-6 flex items-center gap-1 overflow-x-auto custom-scroll py-1.5">
+        <button type="button" data-main-tab="workshops" class="main-nav-btn px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap transition bg-amber-500 text-stone-950 shadow">
+          🔥 四大非遺工藝工坊
+        </button>
+        <button type="button" data-main-tab="snacks" class="main-nav-btn px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap transition text-amber-200/80 hover:bg-amber-900/40">
+          📖 12款嶺南小吃全圖鑑
+        </button>
+        <button type="button" data-main-tab="highlights" class="main-nav-btn px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap transition text-amber-200/80 hover:bg-amber-900/40">
+          ✨ 三大AI/AR創意亮點
+        </button>
+        <button type="button" data-main-tab="identity" class="main-nav-btn px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap transition text-amber-200/80 hover:bg-amber-900/40">
+          🗺️ 港粵尋根與比賽匯報
+        </button>
+        <button type="button" data-main-tab="github" class="main-nav-btn px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap transition text-amber-200/80 hover:bg-amber-900/40">
+          📦 GitHub 部署與源碼
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="relative overflow-hidden border-b border-amber-900/20 bg-stone-900 text-amber-50">
+    <img src="assets/hero_banner.jpg" alt="尋味嶺南非遺小吃工坊" class="w-full h-48 sm:h-60 object-cover opacity-45" />
+    <div class="absolute inset-0 bg-gradient-to-r from-[#26110A]/95 via-[#26110A]/75 to-transparent"></div>
+    <div class="absolute inset-0 max-w-7xl mx-auto px-4 sm:px-6 flex flex-col justify-center">
+      <div class="max-w-2xl space-y-2">
+        <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 text-xs font-medium">
+          <span>🏆 參賽完整互動原型</span>
+          <span>•</span>
+          <span>感應器互動 × 飲食科學 STEM × 港粵文化尋根</span>
+        </div>
+        <h2 class="font-serif-tc text-xl sm:text-3xl font-black text-white leading-tight">
+          由香港街頭味道，尋根大灣區非遺匠心
+        </h2>
+        <p class="text-xs sm:text-sm text-amber-100/90 leading-relaxed">
+          將 12 款港粵同源名小吃歸納為「時光發酵、巧手木模、流體撞擊、酥皮千層」四大工藝模組。透過溫濕度微觀鏡、壓感吹氣、75°C 陀螺儀撞奶與多點摺疊手勢，領略舌尖上的科學與血脈共鳴。
+        </p>
+        <div class="pt-1 flex flex-wrap gap-2">
+          <button type="button" id="heroBtnStartWorkshop" class="px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs sm:text-sm transition shadow">
+            🚀 立即進入四大工坊闖關
+          </button>
+          <button type="button" id="heroBtnTryAI" class="px-3.5 py-1.5 rounded-lg bg-red-800/90 hover:bg-red-700 text-amber-100 border border-amber-400/30 font-semibold text-xs sm:text-sm transition">
+            ✨ 體驗 AI 餅印與 AR 廚房
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 py-6">
+
+    <!-- ==========================================
+         TAB 1: 四大非遺核心工藝工坊 (WORKSHOPS)
+         ========================================== -->
+    <section id="tab-workshops" class="main-tab-panel space-y-6">
+      <!-- 4 Workshop Selector Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <button type="button" data-workshop="ferment" class="workshop-select-btn text-left p-3.5 rounded-xl border-2 transition wood-card border-red-800 ring-2 ring-red-800/30">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-bold px-2 py-0.5 rounded bg-red-900 text-amber-100">第一關・微觀與溫控</span>
+            <span id="badge-ws-ferment" class="text-xs font-bold text-amber-700">未通關</span>
+          </div>
+          <h3 class="font-serif-tc font-bold text-base text-stone-900">1. 時光發酵坊</h3>
+          <p class="text-xs text-stone-600 mt-0.5">溫濕度滑桿 + AR 酵母微觀鏡</p>
+          <div class="mt-2 flex flex-wrap gap-1">
+            <span class="text-[11px] bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded">順德倫教糕</span>
+            <span class="text-[11px] bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded">廣式叉燒包</span>
+            <span class="text-[11px] bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded">新會陳皮紅豆沙</span>
+          </div>
+        </button>
+
+        <button type="button" data-workshop="mold" class="workshop-select-btn text-left p-3.5 rounded-xl border-2 transition wood-card border-amber-200 hover:border-amber-500">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-bold px-2 py-0.5 rounded bg-amber-800 text-amber-100">第二關・觸覺與力道</span>
+            <span id="badge-ws-mold" class="text-xs font-bold text-stone-500">未通關</span>
+          </div>
+          <h3 class="font-serif-tc font-bold text-base text-stone-900">2. 巧手木模坊</h3>
+          <p class="text-xs text-stone-600 mt-0.5">壓感觸控填粉 + 麥克風吹氣掃粉</p>
+          <div class="mt-2 flex flex-wrap gap-1">
+            <span class="text-[11px] bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded">中山咀香園杏仁餅</span>
+            <span class="text-[11px] bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded">廣式蓮蓉月餅</span>
+            <span class="text-[11px] bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded">客家艾粄/茶果</span>
+          </div>
+        </button>
+
+        <button type="button" data-workshop="fluid" class="workshop-select-btn text-left p-3.5 rounded-xl border-2 transition wood-card border-amber-200 hover:border-amber-500">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-bold px-2 py-0.5 rounded bg-sky-900 text-sky-100">第三關・重力與節奏</span>
+            <span id="badge-ws-fluid" class="text-xs font-bold text-stone-500">未通關</span>
+          </div>
+          <h3 class="font-serif-tc font-bold text-base text-stone-900">3. 流體撞擊坊</h3>
+          <p class="text-xs text-stone-600 mt-0.5">75°C 黃金溫度 + 手機陀螺儀撞奶</p>
+          <div class="mt-2 flex flex-wrap gap-1">
+            <span class="text-[11px] bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded">番禺沙灣薑撞奶</span>
+            <span class="text-[11px] bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded">順德雙皮奶</span>
+            <span class="text-[11px] bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded">港式絲襪奶茶</span>
+          </div>
+        </button>
+
+        <button type="button" data-workshop="pastry" class="workshop-select-btn text-left p-3.5 rounded-xl border-2 transition wood-card border-amber-200 hover:border-amber-500">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-bold px-2 py-0.5 rounded bg-emerald-900 text-emerald-100">第四關・手勢與火候</span>
+            <span id="badge-ws-pastry" class="text-xs font-bold text-stone-500">未通關</span>
+          </div>
+          <h3 class="font-serif-tc font-bold text-base text-stone-900">4. 酥皮千層坊</h3>
+          <p class="text-xs text-stone-600 mt-0.5">三摺四轉手勢 + 聽聲辨油溫畫圈</p>
+          <div class="mt-2 flex flex-wrap gap-1">
+            <span class="text-[11px] bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded">港式酥皮蛋撻</span>
+            <span class="text-[11px] bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded">廣州雞仔餅</span>
+            <span class="text-[11px] bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded">東莞糖不甩/煎堆</span>
+          </div>
+        </button>
+      </div>
+
+      <!-- ====================================================
+           WORKSHOP 1 PANEL: 時光發酵坊 (順德倫教糕)
+           ==================================================== -->
+      <div id="ws-panel-ferment" class="workshop-panel wood-card rounded-2xl p-4 sm:p-6">
+        <div class="flex flex-col lg:flex-row gap-6">
+          <!-- Left: Interactive Canvas & Microscope -->
+          <div class="lg:w-7/12 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <span class="text-xs font-bold text-red-800 uppercase">工坊一・代表作實戰</span>
+                <h3 class="font-serif-tc text-xl font-bold text-stone-900">順德倫教糕（香港白糖糕）— 溫控與微觀發酵</h3>
+              </div>
+              <button type="button" id="btnToggleMicroscope" class="px-3 py-1.5 rounded-lg bg-indigo-900 hover:bg-indigo-800 text-white text-xs font-bold flex items-center gap-1.5 shadow transition">
+                <span>🔬</span>
+                <span id="microscopeBtnText">開啟「AR 微觀鏡」視角</span>
+              </button>
+            </div>
+
+            <!-- Canvas Container -->
+            <div class="relative rounded-xl overflow-hidden border-2 border-amber-900/30 bg-stone-950 h-72 sm:h-80">
+              <canvas id="canvasFerment" class="w-full h-full block"></canvas>
+              <!-- HUD Overlay -->
+              <div class="absolute top-3 left-3 flex flex-wrap gap-2 pointer-events-none">
+                <span id="fermentWeatherBadge" class="px-2.5 py-1 rounded-md bg-black/70 text-amber-200 text-xs font-medium border border-amber-400/30">
+                  🌤️ 當前天氣：春季潮濕 (22°C)
+                </span>
+                <span id="fermentViewBadge" class="px-2.5 py-1 rounded-md bg-red-900/80 text-white text-xs font-bold">
+                  👁️ 宏觀米漿發酵視角
+                </span>
+              </div>
+              <div class="absolute bottom-3 left-3 right-3 bg-black/75 backdrop-blur-sm rounded-lg p-2.5 text-xs text-amber-100 flex flex-wrap items-center justify-between gap-2 border border-amber-500/30">
+                <div>
+                  <span>氣孔成型度（豬膏眼）：</span>
+                  <strong id="fermentPoreScore" class="text-amber-400">0%</strong>
+                </div>
+                <div>
+                  <span>乳酸菌酸度 (pH)：</span>
+                  <strong id="fermentPhValue" class="text-emerald-400">6.2 (正常)</strong>
+                </div>
+                <div>
+                  <span>狀態：</span>
+                  <strong id="fermentStatusLabel" class="text-white">待啟動發酵</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="grid grid-cols-3 gap-2">
+              <button type="button" id="btnFermentStart" class="py-2.5 px-3 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs sm:text-sm shadow transition">
+                ▶️ 開始發酵計時
+              </button>
+              <button type="button" id="btnFermentStop" class="py-2.5 px-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs sm:text-sm shadow transition">
+                🛑 精準截停・入籠蒸製
+              </button>
+              <button type="button" id="btnFermentReset" class="py-2.5 px-3 rounded-xl bg-stone-700 hover:bg-stone-600 text-stone-100 font-semibold text-xs sm:text-sm transition">
+                🔄 重新調配米漿
+              </button>
+            </div>
+          </div>
+
+          <!-- Right: Sliders, STEM Knowledge & Origin -->
+          <div class="lg:w-5/12 flex flex-col justify-between space-y-4">
+            <div class="bg-amber-50/90 border border-amber-300 rounded-xl p-4 space-y-3">
+              <div class="flex items-center justify-between">
+                <h4 class="font-bold text-sm text-stone-900">🎛️ 發酵箱感應控制面板</h4>
+                <select id="selectFermentWeather" aria-label="選擇天氣情境" class="text-xs bg-white border border-amber-400 rounded-lg px-2 py-1 font-medium text-stone-800">
+                  <option value="spring">春季潮濕 (室溫 22°C)</option>
+                  <option value="summer">夏季酷熱 (室溫 33°C・易變酸)</option>
+                  <option value="autumn">秋風乾爽 (室溫 25°C)</option>
+                  <option value="winter">寒冬低溫 (室溫 14°C・發酵慢)</option>
+                </select>
+              </div>
+
+              <!-- Temp Slider -->
+              <div>
+                <div class="flex justify-between text-xs font-semibold mb-1">
+                  <span>🌡️ 發酵箱溫度設定（黃金區間：36°C–38°C）</span>
+                  <span id="labelFermentTemp" class="text-red-800 font-bold">37°C</span>
+                </div>
+                <input id="sliderFermentTemp" type="range" min="20" max="50" value="37" class="w-full accent-red-800 cursor-pointer" />
+              </div>
+
+              <!-- Humidity Slider -->
+              <div>
+                <div class="flex justify-between text-xs font-semibold mb-1">
+                  <span>💧 相對濕度控制（黃金區間：75%–85%）</span>
+                  <span id="labelFermentHumidity" class="text-sky-800 font-bold">80%</span>
+                </div>
+                <input id="sliderFermentHumidity" type="range" min="40" max="95" value="80" class="w-full accent-sky-700 cursor-pointer" />
+              </div>
+
+              <!-- Progress & Acid Meters -->
+              <div class="space-y-2 pt-1">
+                <div>
+                  <div class="flex justify-between text-xs mb-0.5">
+                    <span>🫧 酵母菌產氣進度（請於 82%–96% 之間截停！）</span>
+                    <span id="fermentProgressNum" class="font-bold text-amber-800">0%</span>
+                  </div>
+                  <div class="w-full h-3 bg-stone-200 rounded-full overflow-hidden relative">
+                    <div class="absolute inset-y-0 left-[82%] right-[4%] bg-emerald-400/40 border-x border-emerald-700" title="黃金截停區"></div>
+                    <div id="barFermentProgress" class="h-full bg-gradient-to-r from-amber-500 to-emerald-600 transition-all duration-150" style="width: 0%"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between text-xs mb-0.5">
+                    <span>🍋 乳酸累積超標警戒（超過 75% 會變成酸白糖糕！）</span>
+                    <span id="fermentAcidNum" class="font-bold text-red-700">12%</span>
+                  </div>
+                  <div class="w-full h-2.5 bg-stone-200 rounded-full overflow-hidden">
+                    <div id="barFermentAcid" class="h-full bg-gradient-to-r from-yellow-400 via-orange-500 to-red-700 transition-all duration-150" style="width: 12%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Feedback Box -->
+            <div id="fermentFeedbackBox" class="bg-white border-l-4 border-red-800 rounded-r-xl p-3.5 text-xs space-y-1.5 shadow-sm">
+              <div class="font-bold text-stone-900 flex items-center justify-between">
+                <span>👨‍🍳 匠人操作提示</span>
+                <span id="fermentStarsText" class="text-amber-500 font-bold">☆☆☆</span>
+              </div>
+              <p id="fermentResultMessage" class="text-stone-700 leading-relaxed">
+                點擊「開始發酵計時」，開啟「AR 微觀鏡」觀察酵母菌產生二氧化碳氣泡。當氣泡進度進入綠色黃金區（82%–96%）且酸度未超標時，立即按下「精準截停・入籠蒸製」！
+              </p>
+            </div>
+
+            <!-- STEM & Origin Knowledge Box -->
+            <div class="bg-[#3B1F14] text-amber-50 rounded-xl p-3.5 text-xs space-y-2">
+              <div class="flex items-center gap-2 font-bold text-amber-300">
+                <span>🧬 港粵同源與飲食科學 (STEM)</span>
+              </div>
+              <p class="text-amber-100/90 leading-relaxed">
+                <strong>同源連結：</strong>明代順德倫教鎮梁禮成創製的「倫教糕」，隨早年順德媽姐與移民南下香港。早期香港街頭小販未能嚴格控溫，乳酸菌過度繁殖而帶微酸，成為港人熟知的「白糖糕」；正宗倫教糕實為清甜爽滑、橫豎「豬膏眼」氣孔分明。
+              </p>
+              <p class="text-amber-200/80 leading-relaxed">
+                <strong>本工坊亦涵蓋：</strong>#2 廣式叉燒包（老麵酵母與臭粉碳酸氫銨熱分解開花）、#3 新會陳皮紅豆沙（揮發油與黃酮類歲月陳化）。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====================================================
+           WORKSHOP 2 PANEL: 巧手木模坊 (中山咀香園杏仁餅)
+           ==================================================== -->
+      <div id="ws-panel-mold" class="workshop-panel hidden wood-card rounded-2xl p-4 sm:p-6">
+        <div class="flex flex-col lg:flex-row gap-6">
+          <!-- Left: Interactive Wooden Mold Canvas -->
+          <div class="lg:w-7/12 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <span class="text-xs font-bold text-amber-800 uppercase">工坊二・代表作實戰</span>
+                <h3 class="font-serif-tc text-xl font-bold text-stone-900">中山咀香園杏仁餅 — 綠豆粉夾肉心・敲模吹粉</h3>
+              </div>
+              <span id="moldStepIndicator" class="px-3 py-1 rounded-full bg-amber-900 text-amber-100 text-xs font-bold">
+                當前工序：1/3 壓感填粉夾肉心
+              </span>
+            </div>
+
+            <div class="relative rounded-xl overflow-hidden border-2 border-amber-900/30 bg-[#2C1810] h-72 sm:h-80">
+              <canvas id="canvasMold" class="w-full h-full block"></canvas>
+              <div class="absolute top-3 left-3 right-3 flex justify-between items-center pointer-events-none">
+                <span class="px-2.5 py-1 rounded bg-black/65 text-amber-200 text-xs border border-amber-500/30" id="moldLayerLabel">
+                  🪵 百年梨木雙喜餅印
+                </span>
+                <span class="px-2.5 py-1 rounded bg-amber-600/90 text-stone-950 font-bold text-xs" id="moldHintOverlay">
+                  請長按下方「按住蓄力填粉」按鈕！
+                </span>
+              </div>
+            </div>
+
+            <!-- Interactive Controls for 3 Stages -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <button type="button" id="btnMoldPress" class="py-2.5 px-3 rounded-xl bg-amber-600 hover:bg-amber-500 active:scale-95 text-stone-950 font-bold text-xs sm:text-sm shadow transition">
+                🖐️ 按住蓄力填粉
+              </button>
+              <button type="button" id="btnMoldKnock" class="py-2.5 px-3 rounded-xl bg-red-800 hover:bg-red-700 active:scale-95 text-amber-50 font-bold text-xs sm:text-sm shadow transition">
+                🔨 木槌敲模脫坯 (0/3)
+              </button>
+              <button type="button" id="btnMoldBlow" class="py-2.5 px-3 rounded-xl bg-sky-700 hover:bg-sky-600 active:scale-95 text-white font-bold text-xs sm:text-sm shadow transition">
+                💨 吹氣掃走餘粉
+              </button>
+              <button type="button" id="btnMoldMic" class="py-2.5 px-3 rounded-xl bg-stone-800 hover:bg-stone-700 text-amber-200 font-semibold text-xs sm:text-sm border border-amber-500/40 transition">
+                🎙️ 開啟麥克風吹氣
+              </button>
+            </div>
+          </div>
+
+          <!-- Right: Force Gauge & Heritage Details -->
+          <div class="lg:w-5/12 flex flex-col justify-between space-y-4">
+            <div class="bg-amber-50/90 border border-amber-300 rounded-xl p-4 space-y-3">
+              <div class="flex items-center justify-between">
+                <h4 class="font-bold text-sm text-stone-900">⚖️ 觸覺力道與工序監測</h4>
+                <button type="button" id="btnMoldReset" class="text-xs px-2.5 py-1 rounded bg-stone-200 hover:bg-stone-300 font-semibold text-stone-800">
+                  🔄 重製杏仁餅
+                </button>
+              </div>
+
+              <!-- Pressure Bar -->
+              <div>
+                <div class="flex justify-between text-xs mb-1">
+                  <span>🖐️ 按壓填粉力道（黃金緊實度：65%–85%）</span>
+                  <span id="moldPressureText" class="font-bold text-amber-900">0%</span>
+                </div>
+                <div class="w-full h-3.5 bg-stone-200 rounded-full overflow-hidden relative">
+                  <div class="absolute inset-y-0 left-[65%] right-[15%] bg-emerald-500/35 border-x-2 border-emerald-700"></div>
+                  <div id="barMoldPressure" class="h-full bg-gradient-to-r from-amber-400 via-emerald-600 to-red-700 transition-all duration-75" style="width: 0%"></div>
+                </div>
+                <p class="text-[11px] text-stone-500 mt-1">力道太輕（&lt;65%）出爐會散裂；力道太重（&gt;85%）口感死實不鬆化。</p>
+              </div>
+
+              <!-- Knock Progress -->
+              <div class="flex items-center justify-between text-xs bg-white p-2.5 rounded-lg border border-amber-200">
+                <span>🔨 木槌敲模震動次數：</span>
+                <span id="moldKnockStatus" class="font-bold text-red-800">0 / 3 次（左、右、頂部）</span>
+              </div>
+
+              <!-- Powder Removal Progress -->
+              <div>
+                <div class="flex justify-between text-xs mb-1">
+                  <span>💨 表面餘粉清除率（對麥克風吹氣或按「吹氣掃走餘粉」）</span>
+                  <span id="moldCleanText" class="font-bold text-sky-800">0%</span>
+                </div>
+                <div class="w-full h-2.5 bg-stone-200 rounded-full overflow-hidden">
+                  <div id="barMoldClean" class="h-full bg-sky-600 transition-all duration-150" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+
+            <div id="moldFeedbackBox" class="bg-white border-l-4 border-amber-700 rounded-r-xl p-3.5 text-xs space-y-1.5 shadow-sm">
+              <div class="font-bold text-stone-900 flex items-center justify-between">
+                <span>👨‍🍳 巧手木模評語</span>
+                <span id="moldStarsText" class="text-amber-500 font-bold">☆☆☆</span>
+              </div>
+              <p id="moldResultMessage" class="text-stone-700 leading-relaxed">
+                第一步：按住「按住蓄力填粉」按鈕，當力道進入 65%–85% 綠色黃金區時放手！
+              </p>
+            </div>
+
+            <div class="bg-[#3B1F14] text-amber-50 rounded-xl p-3.5 text-xs space-y-2">
+              <div class="font-bold text-amber-300">🪵 港粵同源與非遺「餅印雕刻」</div>
+              <p class="text-amber-100/90 leading-relaxed">
+                <strong>同源連結：</strong>中山石岐咀香園於 1918 年首創「綠豆粉夾肉心」炭焙杏仁餅，這門梨木餅印雕刻與烘培技藝隨嶺南餅師南傳香港，孕育出元朗老字號唐餅家與香港中秋月餅模傳統。
+              </p>
+              <p class="text-amber-200/80 leading-relaxed">
+                <strong>本工坊亦涵蓋：</strong>#5 廣式蓮蓉月餅（回油反砂化學與蓮蓉炒製）、#6 客家艾粄/茶果（艾草纖維韌性與蒸氣定型）。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====================================================
+           WORKSHOP 3 PANEL: 流體撞擊坊 (番禺沙灣薑撞奶)
+           ==================================================== -->
+      <div id="ws-panel-fluid" class="workshop-panel hidden wood-card rounded-2xl p-4 sm:p-6">
+        <div class="flex flex-col lg:flex-row gap-6">
+          <!-- Left: Interactive Pouring Canvas -->
+          <div class="lg:w-7/12 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <span class="text-xs font-bold text-sky-900 uppercase">工坊三・代表作實戰</span>
+                <h3 class="font-serif-tc text-xl font-bold text-stone-900">番禺沙灣薑撞奶 — 黃金 75°C 體感傾斜高處撞奶</h3>
+              </div>
+              <button type="button" id="btnEnableGyro" class="px-3 py-1.5 rounded-lg bg-sky-800 hover:bg-sky-700 text-white text-xs font-bold flex items-center gap-1 shadow transition">
+                <span>📱</span>
+                <span id="gyroBtnLabel">啟用手機陀螺儀感應</span>
+              </button>
+            </div>
+
+            <div class="relative rounded-xl overflow-hidden border-2 border-amber-900/30 bg-[#1B2430] h-72 sm:h-80">
+              <canvas id="canvasFluid" class="w-full h-full block"></canvas>
+              <div class="absolute top-3 left-3 flex flex-wrap gap-2 pointer-events-none">
+                <span id="fluidTempBadge" class="px-3 py-1 rounded-md bg-red-900/90 text-white text-xs font-bold border border-red-400/40">
+                  🌡️ 水牛奶溫度：90.0°C (降溫中...)
+                </span>
+                <span id="fluidAngleBadge" class="px-3 py-1 rounded-md bg-black/70 text-sky-200 text-xs font-semibold">
+                  📐 傾倒角度：55° | 高度：25cm
+                </span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2">
+              <button type="button" id="btnFluidPour" class="py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs sm:text-sm shadow transition">
+                🫗 立即高處撞奶！
+              </button>
+              <button type="button" id="btnFluidSpoonTest" class="py-2.5 px-3 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs sm:text-sm shadow transition">
+                🥄 進行「湯匙浮面」測試
+              </button>
+              <button type="button" id="btnFluidReheat" class="py-2.5 px-3 rounded-xl bg-stone-700 hover:bg-stone-600 text-white font-semibold text-xs sm:text-sm transition">
+                🔥 重新煮沸至 92°C
+              </button>
+            </div>
+          </div>
+
+          <!-- Right: Gyro / Tilt Controls & Zingibain Chemistry -->
+          <div class="lg:w-5/12 flex flex-col justify-between space-y-4">
+            <div class="bg-amber-50/90 border border-amber-300 rounded-xl p-4 space-y-3">
+              <h4 class="font-bold text-sm text-stone-900">📐 陀螺儀體感與流體衝擊控制</h4>
+
+              <!-- Tilt Slider -->
+              <div>
+                <div class="flex justify-between text-xs font-semibold mb-1">
+                  <span>📱 手機傾斜角度（黃金傾角：45°–68°）</span>
+                  <span id="labelFluidAngle" class="text-sky-900 font-bold">55°</span>
+                </div>
+                <input id="sliderFluidAngle" type="range" min="15" max="85" value="55" class="w-full accent-sky-800 cursor-pointer" />
+              </div>
+
+              <!-- Height Slider -->
+              <div>
+                <div class="flex justify-between text-xs font-semibold mb-1">
+                  <span>📏 撞奶壺嘴高度（黃金高度：20cm–30cm 高處衝擊）</span>
+                  <span id="labelFluidHeight" class="text-amber-900 font-bold">25 cm</span>
+                </div>
+                <input id="sliderFluidHeight" type="range" min="8" max="38" value="25" class="w-full accent-amber-700 cursor-pointer" />
+              </div>
+
+              <!-- Enzyme Activity Indicator -->
+              <div class="bg-white rounded-lg p-2.5 border border-amber-200 text-xs space-y-1">
+                <div class="flex justify-between">
+                  <span>🧪 薑汁蛋白酶 (Zingibain) 活性：</span>
+                  <strong id="fluidEnzymeState" class="text-amber-700">等待水牛奶降至 72°C–78°C</strong>
+                </div>
+                <div class="flex justify-between">
+                  <span>🌊 流體紊流混合度：</span>
+                  <strong id="fluidTurbulenceText" class="text-sky-800">94% (極佳衝擊力)</strong>
+                </div>
+              </div>
+            </div>
+
+            <div id="fluidFeedbackBox" class="bg-white border-l-4 border-sky-800 rounded-r-xl p-3.5 text-xs space-y-1.5 shadow-sm">
+              <div class="font-bold text-stone-900 flex items-center justify-between">
+                <span>👨‍🍳 流體撞擊評語</span>
+                <span id="fluidStarsText" class="text-amber-500 font-bold">☆☆☆</span>
+              </div>
+              <p id="fluidResultMessage" class="text-stone-700 leading-relaxed">
+                盯緊左上角溫度計！當水牛奶自然降溫至黃金 75°C（72°C–78°C 區間）時，保持 45°–68° 傾角與 20–30cm 高度，立即按下「立即高處撞奶！」，再測試湯匙能否浮起！
+              </p>
+            </div>
+
+            <div class="bg-[#3B1F14] text-amber-50 rounded-xl p-3.5 text-xs space-y-2">
+              <div class="font-bold text-amber-300">🥛 港粵同源與蛋白質凝結科學 (STEM)</div>
+              <p class="text-amber-100/90 leading-relaxed">
+                <strong>STEM 原理：</strong>老薑汁含有「薑汁蛋白酶 (Zingibain)」，在 <strong>70°C–78°C</strong> 時催化活性最高（高於 85°C 酶會失活、低於 65°C 反應太慢）。利用高處傾倒的重力位能轉化為流體紊流，瞬間混勻水牛奶中的酪蛋白膠束而凝結成膏。
+              </p>
+              <p class="text-amber-200/80 leading-relaxed">
+                <strong>同源連結：</strong>番禺沙灣與順德水牛奶技藝南傳香港，成就澳洲牛奶公司、義順雙皮奶與港式茶餐廳絲襪奶茶「拉茶撞茶」工藝。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====================================================
+           WORKSHOP 4 PANEL: 酥皮千層坊 (港式酥皮蛋撻 & 東莞煎堆)
+           ==================================================== -->
+      <div id="ws-panel-pastry" class="workshop-panel hidden wood-card rounded-2xl p-4 sm:p-6">
+        <div class="flex flex-col lg:flex-row gap-6">
+          <!-- Left: Interactive Folding & Frying Canvas -->
+          <div class="lg:w-7/12 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <span class="text-xs font-bold text-emerald-900 uppercase">工坊四・手勢與火候雙挑戰</span>
+                <h3 class="font-serif-tc text-xl font-bold text-stone-900">港式酥皮蛋撻「三摺四轉」× 東莞煎堆「淋油空心」</h3>
+              </div>
+              <div class="flex gap-1 bg-amber-100 p-1 rounded-lg border border-amber-300">
+                <button type="button" id="btnPastrySubTart" class="px-2.5 py-1 rounded text-xs font-bold bg-amber-800 text-white transition">
+                  🥧 酥皮蛋撻摺疊
+                </button>
+                <button type="button" id="btnPastrySubJiandui" class="px-2.5 py-1 rounded text-xs font-bold text-amber-900 hover:bg-amber-200 transition">
+                  🟠 煎堆聽聲淋油
+                </button>
+              </div>
+            </div>
+
+            <div class="relative rounded-xl overflow-hidden border-2 border-amber-900/30 bg-[#251710] h-72 sm:h-80">
+              <canvas id="canvasPastry" class="w-full h-full block"></canvas>
+              <div class="absolute top-3 left-3 flex flex-wrap gap-2 pointer-events-none">
+                <span id="pastryFormulaBadge" class="px-3 py-1 rounded-md bg-black/75 text-amber-300 text-xs font-bold border border-amber-500/30">
+                  📐 幾何層數公式：2 × 3⁰ = 2 層（目標：162 層）
+                </span>
+                <span id="pastryHeatBadge" class="px-3 py-1 rounded-md bg-amber-700/90 text-white text-xs font-bold">
+                  🔥 爐溫 / 油溫：180°C (黃金酥化)
+                </span>
+              </div>
+            </div>
+
+            <!-- Sub-mode A Controls (Egg Tart Folding) -->
+            <div id="pastryControlsTart" class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <button type="button" id="btnFoldLeft" class="py-2.5 px-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs sm:text-sm shadow transition">
+                ⬅️ 1. 左摺三分一
+              </button>
+              <button type="button" id="btnFoldRight" class="py-2.5 px-3 rounded-xl bg-amber-700 hover:bg-amber-600 text-white font-bold text-xs sm:text-sm shadow transition">
+                ➡️ 2. 右摺覆蓋成三層
+              </button>
+              <button type="button" id="btnRotate90" class="py-2.5 px-3 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs sm:text-sm shadow transition">
+                🔄 3. 旋轉 90° 開酥
+              </button>
+              <button type="button" id="btnBakeTart" class="py-2.5 px-3 rounded-xl bg-red-800 hover:bg-red-700 text-amber-100 font-bold text-xs sm:text-sm shadow transition">
+                🔥 4. 注蛋漿入爐烘烤
+              </button>
+            </div>
+
+            <!-- Sub-mode B Controls (Jiandui Oil Basting) -->
+            <div id="pastryControlsJiandui" class="hidden grid-cols-3 gap-2">
+              <button type="button" id="btnLadleOil" class="py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs sm:text-sm shadow transition">
+                🥄 畫圈淋熱油（膨脹！）
+              </button>
+              <button type="button" id="btnListenOil" class="py-2.5 px-3 rounded-xl bg-sky-800 hover:bg-sky-700 text-white font-bold text-xs sm:text-sm shadow transition">
+                👂 聽滋滋油聲辨火候
+              </button>
+              <button type="button" id="btnResetPastry" class="py-2.5 px-3 rounded-xl bg-stone-700 hover:bg-stone-600 text-white font-semibold text-xs sm:text-sm transition">
+                🔄 重置麵團
+              </button>
+            </div>
+          </div>
+
+          <!-- Right: Geometry & Oil Temp Controls -->
+          <div class="lg:w-5/12 flex flex-col justify-between space-y-4">
+            <div class="bg-amber-50/90 border border-amber-300 rounded-xl p-4 space-y-3">
+              <h4 class="font-bold text-sm text-stone-900">🔢 「三摺四轉」幾何層數與油溫控制</h4>
+
+              <div>
+                <div class="flex justify-between text-xs font-semibold mb-1">
+                  <span>🔥 烘烤 / 油鍋溫度（酥皮黃金溫：180°C；煎堆淋油：155°C）</span>
+                  <span id="labelPastryTemp" class="text-red-800 font-bold">180°C</span>
+                </div>
+                <input id="sliderPastryTemp" type="range" min="120" max="230" value="180" class="w-full accent-red-800 cursor-pointer" />
+              </div>
+
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <div class="bg-white p-2.5 rounded-lg border border-amber-200">
+                  <div class="text-stone-500">當前酥皮層數</div>
+                  <div id="pastryLayerCountText" class="text-lg font-black text-amber-800">2 層 (0/4 轉)</div>
+                </div>
+                <div class="bg-white p-2.5 rounded-lg border border-amber-200">
+                  <div class="text-stone-500">煎堆空心膨脹度</div>
+                  <div id="jianduiExpandText" class="text-lg font-black text-emerald-700">40% 待淋油</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="pastryFeedbackBox" class="bg-white border-l-4 border-emerald-800 rounded-r-xl p-3.5 text-xs space-y-1.5 shadow-sm">
+              <div class="font-bold text-stone-900 flex items-center justify-between">
+                <span>👨‍🍳 酥皮千層評語</span>
+                <span id="pastryStarsText" class="text-amber-500 font-bold">☆☆☆</span>
+              </div>
+              <p id="pastryResultMessage" class="text-stone-700 leading-relaxed">
+                依序點擊「左摺三分一 → 右摺覆蓋 → 旋轉 90° 開酥」，完成 4 輪「三摺四轉」將水皮油皮疊出 162 層酥皮，最後入爐烘烤！
+              </p>
+            </div>
+
+            <div class="bg-[#3B1F14] text-amber-50 rounded-xl p-3.5 text-xs space-y-2">
+              <div class="font-bold text-amber-300">🥧 港粵同源與幾何熱力學 (STEM)</div>
+              <p class="text-amber-100/90 leading-relaxed">
+                <strong>同源連結：</strong>1920 年代廣州四大茶樓（陸羽居、得雲等）首創「星期美點」，將西式吉士撻改良為中式「水皮包豬油皮」蛋撻；南傳香港後融入冰室與茶餐廳，於 2014 年列入香港非物質文化遺產清單。
+              </p>
+              <p class="text-amber-200/80 leading-relaxed">
+                <strong>數學幾何：</strong>每次「三摺」使層數乘以 3（L = 2 × 3ⁿ），經過 4 次摺轉即形成 2 × 3⁴ = 162 層交替隔開的水油薄膜，受熱時水份汽化撐開油層形成千層酥化口感。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         TAB 2: 12 款精選嶺南小吃全圖鑑 (12 SNACKS)
+         ========================================== -->
+    <section id="tab-snacks" class="main-tab-panel hidden space-y-6">
+      <div class="wood-card rounded-2xl p-4 sm:p-6 space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div>
+            <span class="text-xs font-bold text-red-800 uppercase">四大工藝模組 × 12 款港粵同源名點</span>
+            <h2 class="font-serif-tc text-xl sm:text-2xl font-bold text-stone-900">12 款精選嶺南小吃「身世解碼與飲食科學」全圖鑑</h2>
+          </div>
+          <!-- Category Filter Buttons -->
+          <div class="flex flex-wrap gap-1.5" id="snackFilterBar">
+            <button type="button" data-snack-filter="all" class="snack-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-red-800 text-white shadow">全部 12 款</button>
+            <button type="button" data-snack-filter="時光發酵坊" class="snack-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-100 text-stone-800 hover:bg-amber-200">時光發酵坊 (3)</button>
+            <button type="button" data-snack-filter="巧手木模坊" class="snack-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-100 text-stone-800 hover:bg-amber-200">巧手木模坊 (3)</button>
+            <button type="button" data-snack-filter="流體撞擊坊" class="snack-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-100 text-stone-800 hover:bg-amber-200">流體撞擊坊 (3)</button>
+            <button type="button" data-snack-filter="酥皮千層坊" class="snack-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-100 text-stone-800 hover:bg-amber-200">酥皮千層坊 (3)</button>
+          </div>
+        </div>
+
+        <!-- Dynamic 12 Snacks Grid -->
+        <div id="snacksGridContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         TAB 3: 三大核心創意亮點 (3 AI & AR FEATURES)
+         ========================================== -->
+    <section id="tab-highlights" class="main-tab-panel hidden space-y-6">
+      <!-- Sub-navigation for the 3 Highlights -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <button type="button" data-highlight-tab="mold-ai" class="highlight-tab-btn text-left p-4 rounded-xl border-2 transition wood-card border-red-800 ring-2 ring-red-800/30">
+          <div class="text-xs font-bold text-red-800">亮點一・賦權創作</div>
+          <h3 class="font-serif-tc font-bold text-base text-stone-900 mt-0.5">1. AI「非遺餅印」個人化設計器</h3>
+          <p class="text-xs text-stone-600 mt-1">輸入姓氏/校訓，生成嶺南雕花 3D 虛擬梨木餅印並分享至校園排行榜</p>
+        </button>
+
+        <button type="button" data-highlight-tab="ar-kitchen" class="highlight-tab-btn text-left p-4 rounded-xl border-2 transition wood-card border-amber-200 hover:border-amber-500">
+          <div class="text-xs font-bold text-amber-800">亮點二・高度實用性</div>
+          <h3 class="font-serif-tc font-bold text-base text-stone-900 mt-0.5">2. 「真・廚房」AR 實戰導航模式</h3>
+          <p class="text-xs text-stone-600 mt-1">桌面 AR 投射真實材料比例（半碗米漿、兩湯匙薑汁）與智能語音計時器</p>
+        </button>
+
+        <button type="button" data-highlight-tab="ai-chef" class="highlight-tab-btn text-left p-4 rounded-xl border-2 transition wood-card border-amber-200 hover:border-amber-500">
+          <div class="text-xs font-bold text-emerald-800">亮點三・AI 科技應用</div>
+          <h3 class="font-serif-tc font-bold text-base text-stone-900 mt-0.5">3. 「AI 大廚」視覺評分與電子證書</h3>
+          <p class="text-xs text-stone-600 mt-1">圖像識別分析倫教糕氣孔與杏仁餅壓花，由嶺南老師傅評語並頒發證書</p>
+        </button>
+      </div>
+
+      <!-- ----------------------------------------------------
+           HIGHLIGHT 1: AI「非遺餅印」個人化設計器
+           ---------------------------------------------------- -->
+      <div id="hl-panel-mold-ai" class="highlight-panel wood-card rounded-2xl p-4 sm:p-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Left Controls (4 cols) -->
+          <div class="lg:col-span-4 space-y-4">
+            <div>
+              <span class="text-xs font-bold text-red-800 uppercase">AI Generative Heritage Craft</span>
+              <h3 class="font-serif-tc text-xl font-bold text-stone-900">AI「非遺餅印」個人化造模工坊</h3>
+              <p class="text-xs text-stone-600 mt-1">輸入姓氏、校訓或祝福語，演算法自動轉化為嶺南傳統雕花邊框 3D 梨木餅印（含陰刻反字與浮雕成品）。</p>
+            </div>
+
+            <div class="space-y-3 bg-amber-50/90 p-4 rounded-xl border border-amber-300">
+              <div>
+                <label for="inputMoldText" class="block text-xs font-bold text-stone-800 mb-1">✍️ 輸入印章文字（1–4 字，如姓氏/校訓/祝福）：</label>
+                <input id="inputMoldText" type="text" maxlength="4" value="明信" class="w-full px-3 py-2 rounded-lg border border-amber-400 font-serif-tc font-bold text-base text-stone-900 focus:outline-none focus:ring-2 focus:ring-red-800" placeholder="例如：明信、仁愛、嶺南" />
+                <div class="flex flex-wrap gap-1.5 mt-2">
+                  <button type="button" data-preset-text="明信" class="preset-mold-text text-[11px] px-2 py-0.5 rounded bg-amber-200 hover:bg-amber-300 text-stone-900 font-semibold">校訓：明信</button>
+                  <button type="button" data-preset-text="仁愛" class="preset-mold-text text-[11px] px-2 py-0.5 rounded bg-amber-200 hover:bg-amber-300 text-stone-900 font-semibold">校訓：仁愛</button>
+                  <button type="button" data-preset-text="陳氏家傳" class="preset-mold-text text-[11px] px-2 py-0.5 rounded bg-amber-200 hover:bg-amber-300 text-stone-900 font-semibold">陳氏家傳</button>
+                  <button type="button" data-preset-text="嶺南匠心" class="preset-mold-text text-[11px] px-2 py-0.5 rounded bg-amber-200 hover:bg-amber-300 text-stone-900 font-semibold">嶺南匠心</button>
+                  <button type="button" data-preset-text="金榜題名" class="preset-mold-text text-[11px] px-2 py-0.5 rounded bg-amber-200 hover:bg-amber-300 text-stone-900 font-semibold">金榜題名</button>
+                </div>
+              </div>
+
+              <div>
+                <label for="selectMoldBorder" class="block text-xs font-bold text-stone-800 mb-1">🌸 選擇嶺南傳統雕花邊框：</label>
+                <select id="selectMoldBorder" class="w-full px-3 py-2 rounded-lg border border-amber-400 text-xs font-semibold bg-white">
+                  <option value="wanzi">萬字不斷紋（吉祥綿延）</option>
+                  <option value="lychee">嶺南佳果紋（荔枝與壽桃）</option>
+                  <option value="cloud">雙喜祥雲紋（喜慶團圓）</option>
+                  <option value="koi">錦鯉蓮花紋（年年有餘）</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="selectMoldPastryType" class="block text-xs font-bold text-stone-800 mb-1">🥮 選擇蓋印餅食款式：</label>
+                <select id="selectMoldPastryType" class="w-full px-3 py-2 rounded-lg border border-amber-400 text-xs font-semibold bg-white">
+                  <option value="almond">中山石岐綠豆杏仁餅（金黃粉質感）</option>
+                  <option value="mooncake">廣式雙黃白蓮蓉月餅（琥珀回油皮）</option>
+                  <option value="hakka">客家清明翠綠艾粄（草本糯米皮）</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="inputMoldAuthor" class="block text-xs font-bold text-stone-800 mb-1">🏫 創作者姓名與學校（用於校園排行榜）：</label>
+                <input id="inputMoldAuthor" type="text" value="林同學（香港嶺南中學）" class="w-full px-3 py-1.5 rounded-lg border border-amber-400 text-xs bg-white" />
+              </div>
+
+              <div class="grid grid-cols-2 gap-2 pt-1">
+                <button type="button" id="btnStampCustomMold" class="py-2.5 px-3 rounded-xl bg-red-800 hover:bg-red-700 text-white font-bold text-xs shadow transition">
+                  🔨 蓋印出爐動畫
+                </button>
+                <button type="button" id="btnDownloadMoldPng" class="py-2.5 px-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs shadow transition">
+                  💾 下載餅印設計圖
+                </button>
+              </div>
+              <button type="button" id="btnShareMoldLeaderboard" class="w-full py-2.5 px-3 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs shadow transition">
+                🏆 發佈至「全港校園非遺造物排行榜」
+              </button>
+            </div>
+          </div>
+
+          <!-- Center 3D Mold & Stamped Cake Canvas (5 cols) -->
+          <div class="lg:col-span-5 flex flex-col justify-between space-y-3">
+            <div class="relative rounded-2xl overflow-hidden border-2 border-amber-900/30 bg-[#22120B] h-80 sm:h-96 flex items-center justify-center">
+              <canvas id="canvasCustomMold" class="w-full h-full block"></canvas>
+              <div class="absolute top-3 left-3 right-3 flex justify-between items-center pointer-events-none">
+                <span class="px-2.5 py-1 rounded bg-black/70 text-amber-200 text-xs border border-amber-500/30">
+                  🪵 左：3D 梨木陰刻模（反字） | 🥮 右：蓋印立體成品
+                </span>
+              </div>
+            </div>
+            <p class="text-xs text-stone-600 text-center">
+              💡 提示：傳統木模雕刻採用「陰刻反字（鏡像）」，蓋在綠豆粉或月餅皮上脫模後，便會呈現「陽文正字」立體浮雕！
+            </p>
+          </div>
+
+          <!-- Right Campus Leaderboard (3 cols) -->
+          <div class="lg:col-span-3 bg-amber-50/90 border border-amber-300 rounded-xl p-4 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between border-b border-amber-200 pb-2 mb-3">
+                <h4 class="font-bold text-sm text-stone-900">🏆 校園非遺餅印排行榜</h4>
+                <span class="text-[11px] bg-red-800 text-white px-2 py-0.5 rounded-full">實時互動</span>
+              </div>
+              <div id="moldLeaderboardList" class="space-y-2.5 max-h-72 overflow-y-auto custom-scroll pr-1"></div>
+            </div>
+            <div class="mt-3 pt-2 border-t border-amber-200 text-[11px] text-stone-600">
+              點擊作品右側「👍 讚好」為同學的創意校訓餅印投票！
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ----------------------------------------------------
+           HIGHLIGHT 2: 「真・廚房」AR 實戰導航模式
+           ---------------------------------------------------- -->
+      <div id="hl-panel-ar-kitchen" class="highlight-panel hidden wood-card rounded-2xl p-4 sm:p-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Left AR Viewport (7 cols) -->
+          <div class="lg:col-span-7 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <span class="text-xs font-bold text-amber-800 uppercase">AR Kitchen Guided Mode</span>
+                <h3 class="font-serif-tc text-xl font-bold text-stone-900">「真・廚房」AR 桌面材料比例投射與語音導航</h3>
+              </div>
+              <div class="flex gap-2">
+                <button type="button" id="btnToggleARCamera" class="px-3 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-amber-200 text-xs font-bold border border-amber-500/40 transition">
+                  📷 開啟真實手機鏡頭 AR
+                </button>
+                <button type="button" id="btnSpeakARStep" class="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-stone-950 text-xs font-bold shadow transition">
+                  🔊 語音朗讀當前步驟
+                </button>
+              </div>
+            </div>
+
+            <!-- AR Camera + Canvas Overlay -->
+            <div class="relative rounded-2xl overflow-hidden border-2 border-emerald-600/50 bg-stone-950 h-80 sm:h-96">
+              <video id="arCameraVideo" autoplay playsinline muted class="hidden absolute inset-0 w-full h-full object-cover"></video>
+              <canvas id="canvasARKitchen" class="relative z-10 w-full h-full block"></canvas>
+
+              <!-- Top AR HUD -->
+              <div class="absolute top-3 left-3 right-3 z-20 flex flex-wrap justify-between items-center gap-2 pointer-events-none">
+                <span id="arHudRecipeName" class="px-3 py-1 rounded-full bg-emerald-900/90 text-emerald-100 text-xs font-bold border border-emerald-400/40">
+                  🟢 AR 桌面定位完成：順德倫教糕（白糖糕）
+                </span>
+                <span id="arHudStepBadge" class="px-3 py-1 rounded-full bg-black/75 text-amber-300 text-xs font-bold">
+                  步驟 1 / 4
+                </span>
+              </div>
+            </div>
+
+            <!-- Step Navigation & Smart Timer Bar -->
+            <div class="flex flex-wrap items-center justify-between gap-3 bg-stone-900 text-amber-50 p-3.5 rounded-xl">
+              <div class="flex items-center gap-2">
+                <button type="button" id="btnARPrevStep" class="px-3 py-1.5 rounded-lg bg-stone-700 hover:bg-stone-600 text-xs font-bold">
+                  ⬅️ 上一步
+                </button>
+                <button type="button" id="btnARNextStep" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-bold">
+                  下一步 ➡️
+                </button>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <div class="text-xs">
+                  <span class="text-amber-300">⏱️ 智能語音計時器：</span>
+                  <strong id="arTimerDisplay" class="font-mono text-base text-white">03:00</strong>
+                </div>
+                <button type="button" id="btnARTimerToggle" class="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold">
+                  ▶️ 啟動計時
+                </button>
+                <button type="button" id="btnARTimerReset" class="px-2.5 py-1.5 rounded-lg bg-stone-700 hover:bg-stone-600 text-stone-200 text-xs">
+                  重置
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Recipe Selector & Proportion Scaling (5 cols) -->
+          <div class="lg:col-span-5 flex flex-col justify-between space-y-4">
+            <div class="bg-amber-50/90 border border-amber-300 rounded-xl p-4 space-y-3">
+              <div class="flex items-center justify-between">
+                <label for="selectARRecipe" class="font-bold text-sm text-stone-900">🍲 選擇居家 / 家政課實戰食譜：</label>
+              </div>
+              <select id="selectARRecipe" class="w-full px-3 py-2 rounded-lg border border-amber-400 text-xs sm:text-sm font-bold bg-white text-stone-900">
+                <option value="lunjiao">1. 順德倫教糕 / 白糖糕（半碗米漿黃金比例）</option>
+                <option value="gingermilk">2. 番禺沙灣薑撞奶（兩湯匙老薑汁 × 75°C 水牛奶）</option>
+                <option value="tangbushuai">3. 東莞糖不甩（糯米粉搓圓 × 黃糖花生碎）</option>
+                <option value="eggtart">4. 港式酥皮蛋撻（黃金蛋漿比例：蛋液與淡奶）</option>
+              </select>
+
+              <!-- Serving Multiplier -->
+              <div>
+                <span class="block text-xs font-bold text-stone-700 mb-1.5">👨‍👩‍👧 調整份量比例（AR 投射量杯自動換算）：</span>
+                <div class="grid grid-cols-3 gap-2">
+                  <button type="button" data-ar-servings="1" class="ar-serving-btn py-1.5 rounded-lg text-xs font-bold bg-amber-200 text-stone-900">1人試作份</button>
+                  <button type="button" data-ar-servings="2" class="ar-serving-btn py-1.5 rounded-lg text-xs font-bold bg-red-800 text-white shadow">2人標準份</button>
+                  <button type="button" data-ar-servings="4" class="ar-serving-btn py-1.5 rounded-lg text-xs font-bold bg-amber-200 text-stone-900">4人孝親家庭份</button>
+                </div>
+              </div>
+
+              <!-- Ingredient Proportion Table -->
+              <div class="bg-white rounded-lg p-3 border border-amber-200 space-y-1.5">
+                <div class="text-xs font-bold text-stone-800 border-b border-stone-200 pb-1">📏 AR 桌面視覺投射材料清單</div>
+                <div id="arIngredientsList" class="space-y-1 text-xs text-stone-700"></div>
+              </div>
+            </div>
+
+            <!-- Current Step Detailed Card -->
+            <div class="bg-white border-l-4 border-emerald-700 rounded-r-xl p-4 space-y-2 shadow-sm">
+              <div class="text-xs font-bold text-emerald-800" id="arStepTitle">步驟一：調配半碗粘米粉漿</div>
+              <p id="arStepDesc" class="text-xs sm:text-sm text-stone-700 leading-relaxed"></p>
+              <div class="text-[11px] text-amber-800 bg-amber-50 p-2 rounded border border-amber-200" id="arStepSciTip"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ----------------------------------------------------
+           HIGHLIGHT 3: 「AI 大廚」視覺評分系統 & 電子證書
+           ---------------------------------------------------- -->
+      <div id="hl-panel-ai-chef" class="highlight-panel hidden wood-card rounded-2xl p-4 sm:p-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Left: Upload / Sample Picker & AI Vision Scanner (6 cols) -->
+          <div class="lg:col-span-6 space-y-4">
+            <div>
+              <span class="text-xs font-bold text-emerald-800 uppercase">AI Computer Vision Assessment</span>
+              <h3 class="font-serif-tc text-xl font-bold text-stone-900">「AI 大廚」視覺識別評分與電子證書系統</h3>
+              <p class="text-xs text-stone-600 mt-1">拍照上傳你在家或大灣區考察工作坊親手製作的小吃，AI 自動識別倫教糕「豬膏眼」氣孔分佈與杏仁餅壓花完整度！</p>
+            </div>
+
+            <!-- Sample Picker or File Upload -->
+            <div class="bg-amber-50/90 border border-amber-300 rounded-xl p-3.5 space-y-3">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="text-xs font-bold text-stone-800">📸 選擇實作樣本或上傳真實照片：</span>
+                <label class="px-3 py-1.5 rounded-lg bg-red-800 hover:bg-red-700 text-white text-xs font-bold cursor-pointer shadow transition">
+                  <span>📤 上傳手機/電腦作品照片</span>
+                  <input id="inputAIChefPhoto" type="file" accept="image/*" class="hidden" />
+                </label>
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <button type="button" data-ai-sample="lunjiao_good" class="ai-sample-btn p-2 rounded-lg text-xs font-bold bg-amber-800 text-white shadow text-center">
+                  ✨ 樣本1：完美倫教糕
+                </button>
+                <button type="button" data-ai-sample="almond_good" class="ai-sample-btn p-2 rounded-lg text-xs font-bold bg-white border border-amber-300 text-stone-800 hover:bg-amber-100 text-center">
+                  🥮 樣本2：手作杏仁餅
+                </button>
+                <button type="button" data-ai-sample="ginger_good" class="ai-sample-btn p-2 rounded-lg text-xs font-bold bg-white border border-amber-300 text-stone-800 hover:bg-amber-100 text-center">
+                  🥣 樣本3：沙灣薑撞奶
+                </button>
+                <button type="button" data-ai-sample="lunjiao_dense" class="ai-sample-btn p-2 rounded-lg text-xs font-bold bg-white border border-amber-300 text-stone-800 hover:bg-amber-100 text-center">
+                  🔍 樣本4：氣孔偏少糕
+                </button>
+              </div>
+            </div>
+
+            <!-- AI Vision Scanner Canvas -->
+            <div class="relative rounded-2xl overflow-hidden border-2 border-amber-900/30 bg-stone-950 h-64 sm:h-72">
+              <canvas id="canvasAIChefScan" class="w-full h-full block"></canvas>
+              <div class="absolute top-3 left-3 pointer-events-none">
+                <span id="aiScanBadge" class="px-2.5 py-1 rounded bg-emerald-900/90 text-emerald-200 text-xs font-mono font-bold border border-emerald-400/40">
+                  [AI VISION] 氣孔紋理與邊緣檢測完成
+                </span>
+              </div>
+            </div>
+
+            <button type="button" id="btnRunAIScan" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-700 to-teal-800 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-xs sm:text-sm shadow transition">
+              🔍 重新執行 AI 視覺特徵掃描分析
+            </button>
+          </div>
+
+          <!-- Right: Master Chef Feedback & Electronic Certificate (6 cols) -->
+          <div class="lg:col-span-6 space-y-4">
+            <!-- Master Chef Card -->
+            <div class="bg-white border-2 border-amber-400 rounded-2xl p-4 shadow-sm space-y-3">
+              <div class="flex items-start gap-3.5">
+                <img src="assets/master_chef.jpg" alt="嶺南老師傅陳師傅" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover border-2 border-amber-600 shadow shrink-0" />
+                <div class="flex-1 min-w-0">
+                  <div class="flex flex-wrap items-center justify-between gap-1">
+                    <div>
+                      <span class="text-[11px] font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded">虛擬「嶺南老師傅」</span>
+                      <h4 class="font-serif-tc font-bold text-base text-stone-900 mt-0.5">陳師傅（省港非遺點心泰斗）</h4>
+                    </div>
+                    <div id="aiChefScoreBadge" class="text-right">
+                      <span class="text-xl font-black text-red-800">96 分</span>
+                      <div class="text-xs text-amber-500 font-bold">⭐⭐⭐⭐⭐</div>
+                    </div>
+                  </div>
+                  <p id="aiChefCommentText" class="text-xs text-stone-700 mt-2 leading-relaxed bg-amber-50/80 p-2.5 rounded-lg border border-amber-200">
+                    「後生仔好手勢！呢件倫教糕橫豎『豬膏眼』氣孔均勻通透，米香清甜完全無酸味，睇得出你喺發酵溫控同截停時機拿捏得極準，有齊順德老師傅嘅九成功架！」
+                  </p>
+                </div>
+              </div>
+
+              <!-- 4 AI Metrics Bars -->
+              <div id="aiMetricsContainer" class="grid grid-cols-2 gap-2.5 pt-1 text-xs"></div>
+            </div>
+
+            <!-- Electronic Certificate Generator -->
+            <div class="bg-amber-50/90 border border-amber-300 rounded-2xl p-4 space-y-3">
+              <div class="flex items-center justify-between">
+                <h4 class="font-serif-tc font-bold text-sm sm:text-base text-stone-900">🎓 解鎖《嶺南非遺小吃傳承人電子證書》</h4>
+                <span class="text-[11px] text-emerald-800 font-bold">可下載附於比賽報告</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <input id="inputCertName" type="text" value="陳曉明" placeholder="輸入學生姓名" class="px-3 py-1.5 rounded-lg border border-amber-400 text-xs font-bold bg-white" />
+                <input id="inputCertSchool" type="text" value="香港嶺南示範中學" placeholder="輸入學校名稱" class="px-3 py-1.5 rounded-lg border border-amber-400 text-xs bg-white" />
+              </div>
+              <div class="rounded-xl overflow-hidden border border-amber-500/50 bg-white">
+                <canvas id="canvasCertificate" class="w-full h-48 block"></canvas>
+              </div>
+              <button type="button" id="btnDownloadCertificate" class="w-full py-2 px-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs shadow transition">
+                📥 下載高清電子證書 (PNG)
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         TAB 4: 港粵同源尋根地圖 & 比賽匯報重點 (IDENTITY)
+         ========================================== -->
+    <section id="tab-identity" class="main-tab-panel hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left: Interactive GBA Origin Map (7 cols) -->
+        <div class="lg:col-span-7 wood-card rounded-2xl p-4 sm:p-6 space-y-4">
+          <div>
+            <span class="text-xs font-bold text-red-800 uppercase">Greater Bay Area Culinary Lineage</span>
+            <h2 class="font-serif-tc text-xl font-bold text-stone-900">大灣區味覺尋根互動地圖：一脈相承的飲食血緣</h2>
+            <p class="text-xs text-stone-600 mt-1">點擊地圖上的大灣區城市節點（順德、中山、番禺、東莞、新會、廣州），探索它們如何隨先輩南下融入香港街頭：</p>
+          </div>
+
+          <!-- City Node Buttons -->
+          <div class="flex flex-wrap gap-1.5">
+            <button type="button" data-city-node="shunde" class="city-node-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-red-800 text-white shadow">📍 佛山順德</button>
+            <button type="button" data-city-node="zhongshan" class="city-node-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-100 text-stone-800 hover:bg-amber-200">📍 中山石岐</button>
+            <button type="button" data-city-node="panyu" class="city-node-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-100 text-stone-800 hover:bg-amber-200">📍 廣州番禺沙灣</button>
+            <button type="button" data-city-node="guangzhou" class="city-node-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-100 text-stone-800 hover:bg-amber-200">📍 廣州西關茶樓</button>
+            <button type="button" data-city-node="dongguan" class="city-node-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-100 text-stone-800 hover:bg-amber-200">📍 東莞水鄉</button>
+            <button type="button" data-city-node="xinhui" class="city-node-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-100 text-stone-800 hover:bg-amber-200">📍 江門新會/客家</button>
+          </div>
+
+          <!-- Interactive Lineage Map Canvas -->
+          <div class="relative rounded-xl overflow-hidden border-2 border-amber-900/30 bg-[#18222D] h-72 sm:h-80">
+            <canvas id="canvasLineageMap" class="w-full h-full block"></canvas>
+          </div>
+
+          <!-- Selected City Detail Box -->
+          <div id="cityLineageDetailBox" class="bg-amber-50 border-l-4 border-red-800 p-4 rounded-r-xl space-y-1.5 text-xs">
+            <div class="font-bold text-sm text-stone-900" id="cityDetailTitle">佛山順德 ➔ 香港深水埗 / 九龍城 / 佐敦</div>
+            <p id="cityDetailHistory" class="text-stone-700 leading-relaxed">
+              順德素有「中國廚師之鄉」美譽。清末民初大批「順德媽姐（自梳女）」與順德廚師南下香港打工或開舖，將順德倫教糕（演變為香港街頭白糖糕）及順德雙皮奶（成就香港義順、澳洲牛奶公司等甜品文化）帶到香江。
+            </p>
+            <div class="text-red-800 font-semibold" id="cityDetailSnacks">代表同源小吃：#1 順德倫教糕（白糖糕）、#8 順德雙皮奶</div>
+          </div>
+        </div>
+
+        <!-- Right: 3 Competition Pitch Pillars & Family Action Tracker (5 cols) -->
+        <div class="lg:col-span-5 space-y-4">
+          <div class="wood-card rounded-2xl p-4 sm:p-6 space-y-4">
+            <div>
+              <span class="text-xs font-bold text-amber-800 uppercase">Competition Pitch Highlights</span>
+              <h3 class="font-serif-tc text-lg sm:text-xl font-bold text-stone-900">如何完美回應「提升國民身份認同」？（匯報三大重點）</h3>
+            </div>
+
+            <div class="space-y-3 text-xs">
+              <div class="p-3.5 rounded-xl bg-white border border-amber-200 shadow-sm space-y-1">
+                <div class="font-bold text-sm text-red-800">1. 味覺尋根（打破隔閡・舌尖共鳴）</div>
+                <p class="text-stone-700 leading-relaxed">
+                  香港學生每天在街頭吃到的白糖糕、蛋撻、雙皮奶，透過 App 的「身世解碼」，會驚喜發現它們全都有著順德、沙灣、中山的「祖籍」。當用家明白「香港味道」與「嶺南飲食非遺」血脈相連時，「內地與香港系出同源」便不再是一句口號，而是舌尖上真實可感的共鳴。
+                </p>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-white border border-amber-200 shadow-sm space-y-1">
+                <div class="font-bold text-sm text-amber-800">2. 體悟匠心（STEM 解構・文化自信）</div>
+                <p class="text-stone-700 leading-relaxed">
+                  透過親自控制 75°C 的撞奶溫度、觀察倫教糕的微觀發酵與三摺四轉幾何開酥，學生發現傳統中國小吃並非「老土」，而是蘊含高深的生物化學、流體力學與時間哲學，由衷產生對國家非物質文化遺產的敬佩與文化自信。
+                </p>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-white border border-amber-200 shadow-sm space-y-1">
+                <div class="font-bold text-sm text-emerald-800">3. 動手傳承（實踐連結・家庭溫情）</div>
+                <p class="text-stone-700 leading-relaxed">
+                  結合「AR 真廚房模式」與大灣區內地考察團（如沙灣古鎮、順德倫教糕博物館實地打卡），鼓勵學生在家中為父母親手做一道傳統點心，將數位學習轉化為真實的家庭溫情與文化傳承行動。
+                </p>
+              </div>
+            </div>
+
+            <!-- Interactive Student Practice Check-in -->
+            <div class="bg-[#3B1F14] text-amber-50 rounded-xl p-4 space-y-2.5 text-xs">
+              <div class="font-bold text-amber-300 flex items-center justify-between">
+                <span>🏡 「動手傳承」實踐行動打卡清單</span>
+                <span id="practiceCheckCount" class="bg-amber-500 text-stone-950 px-2 py-0.5 rounded font-bold">已完成 1/3</span>
+              </div>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" class="practice-check accent-amber-500 w-4 h-4" checked />
+                <span>在 App 完成至少 1 個非遺工坊科學闖關</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" class="practice-check accent-amber-500 w-4 h-4" />
+                <span>使用「AR 真廚房模式」在家為父母製作薑撞奶或白糖糕</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" class="practice-check accent-amber-500 w-4 h-4" />
+                <span>大灣區交流團實地走訪順德 / 沙灣古鎮 / 中山咀香園打卡</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         TAB 5: GITHUB 部署指南與專案結構 (GITHUB)
+         ========================================== -->
+    <section id="tab-github" class="main-tab-panel hidden space-y-6">
+      <div class="wood-card rounded-2xl p-4 sm:p-6 space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-200 pb-4">
+          <div>
+            <span class="text-xs font-bold text-red-800 uppercase">GitHub Pages Ready Architecture</span>
+            <h2 class="font-serif-tc text-xl sm:text-2xl font-bold text-stone-900">GitHub 專案結構與一鍵部署指南</h2>
+            <p class="text-xs text-stone-600 mt-1">本應用程式採用純前端零依賴架構（HTML5 Canvas + Tailwind + Web Audio + WebRTC/Sensor API），可直接託管於 GitHub Pages 免費供評審與全校師生透過手機/平板瀏覽。</p>
+          </div>
+          <button type="button" id="btnCopyGitCommands" class="px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-amber-300 font-bold text-xs shadow transition shrink-0">
+            📋 複製 Git 上傳指令
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+          <div class="space-y-3">
+            <h3 class="font-bold text-sm text-stone-900">📂 GitHub 儲存庫檔案結構</h3>
+            <pre class="bg-stone-900 text-amber-200 p-4 rounded-xl font-mono text-xs overflow-x-auto leading-relaxed">lingnan-heritage-snacks/
+├── index.html          # 完整互動主程式 (含四大工坊+三大AI/AR亮點)
+├── manifest.json       # PWA 手機桌面安裝設定檔
+├── .nojekyll           # GitHub Pages 靜態資源優化標記
+├── README.md           # 比賽計劃書摘要、功能說明與部署教學
+└── assets/
+    ├── hero_banner.jpg # 嶺南非遺小吃工坊主視覺
+    └── master_chef.jpg # 虛擬嶺南老師傅頭像</pre>
+          </div>
+
+          <div class="space-y-3">
+            <h3 class="font-bold text-sm text-stone-900">🚀 3 步部署至 GitHub Pages（產生公開網址及 QR Code）</h3>
+            <pre id="gitCommandsBlock" class="bg-stone-900 text-emerald-300 p-4 rounded-xl font-mono text-xs overflow-x-auto leading-relaxed"># 1. 解壓縮下載的 GitHub 專案包並初始化 Git
+git init
+git add .
+git commit -m "feat: 尋味嶺南非遺小吃造物局完整互動版"
+
+# 2. 連結你的 GitHub 儲存庫並推送
+git branch -M main
+git remote add origin https://github.com/你的帳號/lingnan-heritage-snacks.git
+git push -u origin main
+
+# 3. 開啟 GitHub Pages：
+# 進入 Repo -> Settings -> Pages -> Branch 選 main -> Save</pre>
+            <p class="text-stone-600 leading-relaxed">
+              💡 <strong>比賽匯報加分貼士：</strong>開啟 GitHub Pages 後，將網址轉成 QR Code 印在比賽展板或簡報最後一頁，讓評審用手機即場掃描體驗「75°C 陀螺儀撞奶」與「AI 餅印設計器」！
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Snack Detail Modal -->
+  <div id="snackModal" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-[#FFFDF9] border-2 border-amber-600 rounded-2xl max-w-xl w-full p-5 sm:p-6 space-y-4 shadow-2xl">
+      <div class="flex items-start justify-between gap-2">
+        <div>
+          <span id="modalSnackWorkshop" class="text-xs font-bold px-2.5 py-0.5 rounded bg-red-800 text-amber-100">工坊</span>
+          <h3 id="modalSnackTitle" class="font-serif-tc text-xl font-bold text-stone-900 mt-1">小吃名稱</h3>
+          <p id="modalSnackOrigin" class="text-xs text-amber-800 font-semibold mt-0.5"></p>
+        </div>
+        <button type="button" id="btnCloseSnackModal" class="w-8 h-8 rounded-full bg-stone-200 hover:bg-stone-300 text-stone-800 font-bold text-sm flex items-center justify-center">✕</button>
+      </div>
+      <div class="space-y-3 text-xs sm:text-sm text-stone-700">
+        <div class="p-3 rounded-xl bg-amber-50 border border-amber-200">
+          <div class="font-bold text-stone-900 mb-1">📱 手機互動玩法（如何學會製作）：</div>
+          <p id="modalSnackPlay"></p>
+        </div>
+        <div class="p-3 rounded-xl bg-red-50/70 border border-red-200">
+          <div class="font-bold text-red-900 mb-1">🔗 港粵同源身世解碼：</div>
+          <p id="modalSnackLineage"></p>
+        </div>
+        <div class="p-3 rounded-xl bg-sky-50 border border-sky-200">
+          <div class="font-bold text-sky-900 mb-1">🧬 STEM 飲食科學與匠心精神：</div>
+          <p id="modalSnackStem"></p>
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" id="btnModalGoWorkshop" class="px-4 py-2 rounded-xl bg-red-800 hover:bg-red-700 text-white font-bold text-xs shadow">
+          🔥 前往對應互動工坊體驗
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-[#2B150D] text-amber-200/70 text-xs py-4 px-4 border-t border-amber-900/50 mt-8">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>《尋味嶺南：非遺小吃造物局》• 四大非遺工藝 × 12款港粵同源小吃 × AI/AR 互動傳承</div>
+      <div>支援手機感應器、平板觸控與桌面瀏覽器 • GitHub Pages Ready</div>
+    </div>
+  </footer>
+
+  <!-- APPLICATION SCRIPT -->
+  <script>
+    (function () {
+      'use strict';
+
+      // =========================================================
+      // 1. GLOBAL STATE & SOUND SYNTHESIS (Web Audio API)
+      // =========================================================
+      const appState = {
+        soundEnabled: true,
+        activeMainTab: 'workshops',
+        activeWorkshop: 'ferment',
+        activeHighlight: 'mold-ai',
+        workshopStars: {
+          ferment: 0,
+          mold: 0,
+          fluid: 0,
+          pastry: 0
+        },
+        selectedModalWorkshopKey: 'ferment'
+      };
+
+      let audioCtx = null;
+      function getAudioContext() {
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) {
+            audioCtx = new AudioContextClass();
+          }
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume().catch(function () {});
+        }
+        return audioCtx;
+      }
+
+      function playSound(type) {
+        if (!appState.soundEnabled) return;
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+
+        if (type === 'click') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(520, now);
+          osc.frequency.exponentialRampToValueAtTime(680, now + 0.06);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.07);
+        } else if (type === 'knock') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(190, now);
+          osc.frequency.exponentialRampToValueAtTime(65, now + 0.11);
+          gain.gain.setValueAtTime(0.32, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.13);
+        } else if (type === 'bubble') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(320 + Math.random() * 180, now);
+          osc.frequency.exponentialRampToValueAtTime(780, now + 0.09);
+          gain.gain.setValueAtTime(0.07, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.1);
+        } else if (type === 'splash') {
+          const bufferSize = ctx.sampleRate * 0.25;
+          const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) {
+            data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.09));
+          }
+          const noise = ctx.createBufferSource();
+          noise.buffer = buffer;
+          const filter = ctx.createBiquadFilter();
+          filter.type = 'bandpass';
+          filter.frequency.setValueAtTime(900, now);
+          const gain = ctx.createGain();
+          gain.gain.setValueAtTime(0.22, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.24);
+          noise.connect(filter);
+          filter.connect(gain);
+          gain.connect(ctx.destination);
+          noise.start(now);
+        } else if (type === 'sizzle') {
+          const bufferSize = ctx.sampleRate * 0.35;
+          const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) {
+            data[i] = (Math.random() * 2 - 1) * 0.5;
+          }
+          const noise = ctx.createBufferSource();
+          noise.buffer = buffer;
+          const filter = ctx.createBiquadFilter();
+          filter.type = 'highpass';
+          filter.frequency.setValueAtTime(2200, now);
+          const gain = ctx.createGain();
+          gain.gain.setValueAtTime(0.14, now);
+          gain.gain.exponentialRampToValueAtTime(0.005, now + 0.34);
+          noise.connect(filter);
+          filter.connect(gain);
+          gain.connect(ctx.destination);
+          noise.start(now);
+        } else if (type === 'success') {
+          const notes = [523.25, 659.25, 783.99, 1046.5];
+          notes.forEach(function (freq, idx) {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+            gain.gain.setValueAtTime(0.14, now + idx * 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.28);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + idx * 0.08);
+            osc.stop(now + idx * 0.08 + 0.29);
+          });
+        }
+      }
+
+      function showToast(message, badge) {
+        const container = document.getElementById('toastContainer');
+        if (!container) return;
+        const item = document.createElement('div');
+        item.className = 'bg-[#2B150D] text-amber-50 border border-amber-400/50 rounded-xl px-4 py-2.5 shadow-xl text-xs flex items-center gap-2 transition-all duration-300';
+        item.innerHTML = '<span class="px-2 py-0.5 rounded bg-amber-500 text-stone-950 font-bold">' + (badge || '提示') + '</span><span>' + message + '</span>';
+        container.appendChild(item);
+        setTimeout(function () {
+          item.style.opacity = '0';
+          setTimeout(function () {
+            if (item.parentNode) item.parentNode.removeChild(item);
+          }, 300);
+        }, 3200);
+      }
+
+      function updateHeaderScore() {
+        const keys = ['ferment', 'mold', 'fluid', 'pastry'];
+        let passed = 0;
+        let totalStars = 0;
+        keys.forEach(function (k) {
+          const s = appState.workshopStars[k] || 0;
+          if (s > 0) passed++;
+          totalStars += s;
+          const badgeEl = document.getElementById('badge-ws-' + k);
+          if (badgeEl) {
+            if (s > 0) {
+              badgeEl.textContent = '★'.repeat(s) + '☆'.repeat(3 - s);
+              badgeEl.className = 'text-xs font-bold text-amber-600';
+            } else {
+              badgeEl.textContent = '未通關';
+              badgeEl.className = 'text-xs font-bold text-stone-500';
+            }
+          }
+        });
+        document.getElementById('headerProgressText').textContent = passed + ' / 4 工坊';
+        document.getElementById('headerStarCount').textContent = '⭐ ' + totalStars;
+      }
+
+      // =========================================================
+      // 2. 12 LINGNAN SNACKS DATA
+      // =========================================================
+      const snacksData = [
+        {
+          id: 1,
+          name: '順德倫教糕（香港稱白糖糕）',
+          workshop: '時光發酵坊',
+          workshopKey: 'ferment',
+          origin: '佛山順德倫教鎮 ➔ 香港街頭白糖糕',
+          emoji: '🍰',
+          sensorTag: '溫濕度滑桿 + AR 微觀鏡',
+          playDesc: '根據四季天氣調整發酵箱溫度（黃金 37°C）。開啟「AR 微觀鏡」觀察酵母菌產生氣泡，在乳酸酸度超標前精準截停，蒸出橫豎相間的「豬膏眼」氣孔。',
+          lineageDesc: '起源於明代順德倫教鎮梁禮成。早年隨順德媽姐與移民南下香港，因街頭小販露天控溫不易、乳酸發酵偏多而帶微酸，成為香港平民最熟悉的「白糖糕」。',
+          stemDesc: '【共生發酵科學】酵母菌進行酒精發酵產生 CO₂ 撐起米漿氣孔；乳酸菌則產生乳酸賦予清爽風味，兩者需在 36–38°C 保持微妙平衡。'
+        },
+        {
+          id: 2,
+          name: '廣式叉燒包（老麵發酵）',
+          workshop: '時光發酵坊',
+          workshopKey: 'ferment',
+          origin: '廣州西關茶樓 ➔ 香港飲茶一盅兩件',
+          emoji: '🥟',
+          sensorTag: '老麵酸鹼中和 + 蒸氣溫控',
+          playDesc: '調配老麵種與枧水比例，透過微觀鏡觀察麵筋網絡延展，在猛火蒸氣衝擊下讓包子頂部自然爆開「雀籠開口（三瓣開花）」。',
+          lineageDesc: '廣州茶樓傳統四大天王之一，隨省港茶樓名師南傳香港，成為港式飲茶文化最具代表性的點心。',
+          stemDesc: '【熱力學與酸鹼中和】老麵發酵產生有機酸，加入適量枧水（碳酸鈉）中和酸味並釋放二氧化碳，配合高溫蒸氣令包頂張力裂開如花。'
+        },
+        {
+          id: 3,
+          name: '新會陳皮紅豆沙（陳化技藝）',
+          workshop: '時光發酵坊',
+          workshopKey: 'ferment',
+          origin: '江門新會東甲/梅江 ➔ 香港糖水舖鎮店之寶',
+          emoji: '🫘',
+          sensorTag: '時光陳化滑桿 + 揮發油微觀鏡',
+          playDesc: '經歷「三瓣開皮、翻曬陳化」時光軸，觀察三年、五年至十年陳皮油室中黃酮類與揮發油的轉化，熬出起沙紅豆湯。',
+          lineageDesc: '新會陳皮為「廣東三寶」之首，香港老字號糖水舖與南北行世代堅持選用新會大紅柑陳皮辟腥增香。',
+          stemDesc: '【天然酶促陳化】柑皮在歲月儲藏中，苦味檸檬苦素逐漸降解，多甲氧基黃酮（PMFs）與陳香揮發油隨年份遞增，與紅豆澱粉糊化完美交融。'
+        },
+        {
+          id: 4,
+          name: '中山咀香園杏仁餅',
+          workshop: '巧手木模坊',
+          workshopKey: 'mold',
+          origin: '中山石岐 ➔ 香港元朗老字號唐餅家',
+          emoji: '🥮',
+          sensorTag: '壓感觸控填粉 + 麥克風吹氣掃粉',
+          playDesc: '講究「綠豆粉夾冰肉心」。用手指按壓螢幕將粉料填入梨木餅印（力道太輕會散、太重會實），點擊木槌「敲模」震出餅坯，再對手機麥克風吹氣掃走多餘粉粒。',
+          lineageDesc: '創於 1918 年中山石岐，傳統木模雕刻與炭焙技術隨餅師傳入香港，與元朗傳統唐餅世家一脈相承。',
+          stemDesc: '【粉體力學與炭焙美拉德反應】綠豆粉含水量極低，需靠精準正向壓應力與冰肉油脂黏合；炭火慢焙使綠豆蛋白與糖分發生美拉德反應散發堅果香。'
+        },
+        {
+          id: 5,
+          name: '廣式蓮蓉月餅',
+          workshop: '巧手木模坊',
+          workshopKey: 'mold',
+          origin: '廣州蓮香樓 ➔ 香港中秋非遺唐餅',
+          emoji: '🌕',
+          sensorTag: '轉化糖漿回油 + 雙喜木模壓印',
+          playDesc: '以薄如紙的「糖漿皮」包裹寸蓮寸金的白蓮蓉與鹹蛋黃，壓入雕有「雙喜、錦鯉」吉祥圖案的梨木餅印，敲模定型。',
+          lineageDesc: '清光緒年間廣州首創純蓮子熬製蓮蓉，省港餅家互通聲氣，更使「廣式月餅製作技藝」成為國家級與香港非遺代表。',
+          stemDesc: '【轉化糖漿與回油現象】檸檬酸將蔗糖水解為葡萄糖與果糖（轉化糖漿），具強吸濕性；烘烤後靜置 2–3 天，內餡油脂向餅皮滲透（乳化回油），使餅皮柔軟油潤。'
+        },
+        {
+          id: 6,
+          name: '客家艾粄 / 茶果',
+          workshop: '巧手木模坊',
+          workshopKey: 'mold',
+          origin: '惠州/梅州客家 ➔ 香港新界圍村與大澳茶果',
+          emoji: '🌿',
+          sensorTag: '草本纖維揉捏 + 木模脫坯',
+          playDesc: '將新鮮艾草泥揉入糯米粉團，壓入木雕花印或手捏成型，墊上蕉葉入籠蒸製。',
+          lineageDesc: '客家先民遷徙香港新界圍村、西貢及大澳，將清明與節慶必吃的「艾粄」演變為香港人郊遊必嚐的「客家茶果」。',
+          stemDesc: '【植物纖維強化凝膠】艾草中的膳食纖維交織於支鏈澱粉（糯米）網絡中，防止蒸製時塌陷並賦予獨特草本芳香萜類化合物。'
+        },
+        {
+          id: 7,
+          name: '番禺沙灣薑撞奶',
+          workshop: '流體撞擊坊',
+          workshopKey: 'fluid',
+          origin: '廣州番禺沙灣古鎮 ➔ 香港甜品舖名物',
+          emoji: '🥣',
+          sensorTag: '75°C 溫度計監測 + 手機陀螺儀高處撞奶',
+          playDesc: '緊盯水牛奶溫度計，當降到黃金 75°C 瞬間，真實傾斜手機將牛奶從高處快速「撞」入薑汁碗中，利用流體衝擊力令蛋白質瞬間凝固。',
+          lineageDesc: '發源於番禺沙灣古鎮水牛奶養殖文化，南傳香港後成為深水埗、佐敦傳統甜品舖的招牌暖胃甜品。',
+          stemDesc: '【酶促凝乳化學】老薑汁中的「薑汁蛋白酶 (Zingibain)」在 70–78°C 活性達峰值，切斷水牛奶中 κ-酪蛋白親水端，令酪蛋白膠束聚集成三維凝膠網，可承托湯匙不沉！'
+        },
+        {
+          id: 8,
+          name: '順德雙皮奶',
+          workshop: '流體撞擊坊',
+          workshopKey: 'fluid',
+          origin: '佛山順德大良 ➔ 香港義順/澳洲牛奶公司',
+          emoji: '🥛',
+          sensorTag: '熱力結皮 + 挑皮刺孔流體注入',
+          playDesc: '先將水牛奶煮熱靜置結出第一層「甘香奶皮」，用竹籤在邊緣挑開小口倒出牛奶混入蛋白，再沿碗邊緩緩溜回碗底蒸出第二層皮。',
+          lineageDesc: '清代順德大良董孝華創製，後由順德師傅帶到港澳，成就香港茶餐廳與燉奶專門店的傳奇。',
+          stemDesc: '【界面張力與雙重熱變性】第一層皮由水牛奶高脂肪球上浮與乳清蛋白熱聚合形成；第二層皮則靠蛋白（卵白蛋白）在 80°C 蒸氣中形成柔嫩水凝膠。'
+        },
+        {
+          id: 9,
+          name: '港式絲襪奶茶',
+          workshop: '流體撞擊坊',
+          workshopKey: 'fluid',
+          origin: '廣州茶居水茶 ➔ 香港中環大排檔蘭芳園',
+          emoji: '🧋',
+          sensorTag: '陀螺儀高處拉茶撞茶 + 單寧乳化',
+          playDesc: '配搭粗中細茶葉拼配，手持兩個茶壺透過陀螺儀體感做「高處來回撞茶（拉茶） 4 次」，再從高處沖入淡奶碗中。',
+          lineageDesc: '1950 年代香港中環大排檔將嶺南沖茶手法結合斯里蘭卡紅茶與荷蘭淡奶，列入香港非物質文化遺產代表作名錄。',
+          stemDesc: '【文丘里效應與單寧酸絡合】高處撞茶引入空氣氧化茶多酚（減低苦澀味），並藉由衝擊力使淡奶中的乳脂肪球與茶湯充分微乳化，造就「掛杯」絲滑口感。'
+        },
+        {
+          id: 10,
+          name: '港式酥皮蛋撻',
+          workshop: '酥皮千層坊',
+          workshopKey: 'pastry',
+          origin: '廣州四大茶樓星期美點 ➔ 香港茶餐廳冰室',
+          emoji: '🥧',
+          sensorTag: '多點觸控「三摺四轉」手勢',
+          playDesc: '製作蛋撻「水皮包油皮」時，在螢幕做出精準「三摺四轉」滑動手勢，將麵皮摺疊出 162 層酥皮，注入黃金蛋漿入爐。',
+          lineageDesc: '1920 年代廣州茶樓點心師將英式吉士撻改良為豬油起酥蛋撻，1940 年代傳入香港茶餐廳並普及全港。',
+          stemDesc: '【指數幾何與水蒸氣膨脹】層數遵循 L = 2 × 3ⁿ 幾何級數；烘烤時水皮中的水分瞬間汽化（體積膨脹 1600 倍），將隔絕水氣的豬油皮頂起形成百層酥皮。'
+        },
+        {
+          id: 11,
+          name: '廣州雞仔餅（小鳳餅）',
+          workshop: '酥皮千層坊',
+          workshopKey: 'pastry',
+          origin: '廣州成珠樓 ➔ 香港傳統唐餅手信',
+          emoji: '🍪',
+          sensorTag: '冰肉糖漬 + 捏製烘烤火候',
+          playDesc: '將肥豬肉以白糖與燒酒醃製成晶瑩「冰肉」，拌入南乳、蒜茸、芝麻與瓜子仁，手捏成小雞形狀入爐烘至外脆內韌。',
+          lineageDesc: '清咸豐年間廣州成珠樓婢女小鳳無意間以梅菜餅壓扁烤製而成，後隨省港商貿成為香港蓮香樓、奇華等老字號名餅。',
+          stemDesc: '【高滲透壓糖漬透明化】白糖與高度白酒改變肥肉細胞滲透壓並抑制脂肪氧化，烘烤後脂肪半透明不油膩，南乳紅麴菌賦予鹹甜複合鮮味。'
+        },
+        {
+          id: 12,
+          name: '東莞糖不甩 / 煎堆',
+          workshop: '酥皮千層坊',
+          workshopKey: 'pastry',
+          origin: '東莞茶山/石龍 ➔ 香港年宵賀年及糖水名點',
+          emoji: '🟠',
+          sensorTag: '聽聲辨火候 + 手指畫圈淋油',
+          playDesc: '炸煎堆時聆聽油鍋滋滋聲辨別油溫，並持續用手指在螢幕畫圈「淋油、輕壓」，使其受熱均勻、空心膨脹如金球（「煎堆轆轆，金銀滿屋」）。',
+          lineageDesc: '嶺南古俗「年晚煎堆」，東莞糖不甩更寓意姻緣甜蜜「甩唔開」，與香港農曆新年及元宵傳統緊密相連。',
+          stemDesc: '【支鏈澱粉糊化與熱空氣膨脹】糯米支鏈澱粉在 155°C 油溫形成高延展性彈性外殼，不斷翻轉淋油使內部水氣均勻受熱膨脹，定型為薄脆空心球體。'
+        }
+      ];
+
+      // =========================================================
+      // 3. RENDER 12 SNACKS GRID & MODAL
+      // =========================================================
+      function renderSnacksGrid(filterWorkshop) {
+        const container = document.getElementById('snacksGridContainer');
+        if (!container) return;
+        const filtered = (!filterWorkshop || filterWorkshop === 'all')
+          ? snacksData
+          : snacksData.filter(function (s) { return s.workshop === filterWorkshop; });
+
+        container.innerHTML = filtered.map(function (snack) {
+          return (
+            '<div class="bg-white border border-amber-200 hover:border-amber-500 rounded-xl p-4 flex flex-col justify-between shadow-sm transition">' +
+              '<div>' +
+                '<div class="flex items-center justify-between gap-2 mb-2">' +
+                  '<span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300">' + snack.workshop + '</span>' +
+                  '<span class="text-xs font-bold text-stone-400">#' + snack.id + '</span>' +
+                '</div>' +
+                '<div class="flex items-center gap-2.5 mb-1.5">' +
+                  '<span class="text-2xl">' + snack.emoji + '</span>' +
+                  '<div>' +
+                    '<h3 class="font-serif-tc font-bold text-base text-stone-900">' + snack.name + '</h3>' +
+                    '<p class="text-[11px] font-semibold text-red-800">' + snack.origin + '</p>' +
+                  '</div>' +
+                '</div>' +
+                '<div class="mt-2 text-xs bg-amber-50/70 border border-amber-200/80 rounded-lg p-2 text-stone-700">' +
+                  '<strong class="text-amber-900">【' + snack.sensorTag + '】</strong> ' + snack.playDesc +
+                '</div>' +
+                '<p class="mt-2 text-xs text-stone-600 line-clamp-2"><strong class="text-stone-800">同源與科學：</strong>' + snack.stemDesc + '</p>' +
+              '</div>' +
+              '<div class="mt-3 pt-2.5 border-t border-stone-100 flex items-center justify-between gap-2">' +
+                '<button type="button" data-open-snack="' + snack.id + '" class="btn-open-snack text-xs font-bold text-red-800 hover:text-red-600">🔍 查看身世與科學詳情</button>' +
+                '<button type="button" data-jump-ws="' + snack.workshopKey + '" class="btn-jump-ws px-2.5 py-1 rounded-lg bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs">🕹️ 進入工坊</button>' +
+              '</div>' +
+            '</div>'
+          );
+        }).join('');
+
+        container.querySelectorAll('.btn-open-snack').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            const id = parseInt(btn.getAttribute('data-open-snack'), 10);
+            openSnackModal(id);
+          });
+        });
+
+        container.querySelectorAll('.btn-jump-ws').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            const wsKey = btn.getAttribute('data-jump-ws');
+            switchMainTab('workshops');
+            switchWorkshop(wsKey);
+          });
+        });
+      }
+
+      function openSnackModal(id) {
+        const snack = snacksData.find(function (s) { return s.id === id; });
+        if (!snack) return;
+        playSound('click');
+        appState.selectedModalWorkshopKey = snack.workshopKey;
+        document.getElementById('modalSnackWorkshop').textContent = snack.workshop + ' • ' + snack.sensorTag;
+        document.getElementById('modalSnackTitle').textContent = snack.emoji + ' ' + snack.name;
+        document.getElementById('modalSnackOrigin').textContent = '📍 港粵同源血脈：' + snack.origin;
+        document.getElementById('modalSnackPlay').textContent = snack.playDesc;
+        document.getElementById('modalSnackLineage').textContent = snack.lineageDesc;
+        document.getElementById('modalSnackStem').textContent = snack.stemDesc;
+        document.getElementById('snackModal').classList.remove('hidden');
+      }
+
+      // =========================================================
+      // 4. WORKSHOP 1 SIMULATOR: 時光發酵坊 (倫教糕微觀鏡)
+      // =========================================================
+      const fermentSim = {
+        running: false,
+        steamed: false,
+        microscope: false,
+        weather: 'spring',
+        temp: 37,
+        humidity: 80,
+        progress: 0,
+        acidity: 12,
+        bubbles: [],
+        timerId: null
+      };
+
+      function initFermentBubbles() {
+        fermentSim.bubbles = [];
+        for (let i = 0; i < 48; i++) {
+          fermentSim.bubbles.push({
+            x: Math.random(),
+            y: Math.random(),
+            r: 3 + Math.random() * 7,
+            vy: 0.002 + Math.random() * 0.004,
+            type: i % 4 === 0 ? 'lactic' : 'yeast'
+          });
+        }
+      }
+
+      function drawFermentCanvas() {
+        const canvas = document.getElementById('canvasFerment');
+        if (!canvas) return;
+        const rect = canvas.parentElement.getBoundingClientRect();
+        if (rect.width > 0 && (canvas.width !== Math.floor(rect.width) || canvas.height !== Math.floor(rect.height))) {
+          canvas.width = Math.floor(rect.width);
+          canvas.height = Math.floor(rect.height);
+        }
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width;
+        const h = canvas.height;
+        ctx.clearRect(0, 0, w, h);
+
+        if (fermentSim.microscope) {
+          const grad = ctx.createRadialGradient(w / 2, h / 2, 20, w / 2, h / 2, Math.max(w, h) * 0.65);
+          grad.addColorStop(0, '#1E1B4B');
+          grad.addColorStop(0.7, '#0F172A');
+          grad.addColorStop(1, '#020617');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, w, h);
+
+          ctx.strokeStyle = 'rgba(99, 102, 241, 0.22)';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.arc(w / 2, h / 2, Math.min(w, h) * 0.42, 0, Math.PI * 2);
+          ctx.moveTo(w / 2 - 120, h / 2);
+          ctx.lineTo(w / 2 + 120, h / 2);
+          ctx.moveTo(w / 2, h / 2 - 120);
+          ctx.lineTo(w / 2, h / 2 + 120);
+          ctx.stroke();
+
+          const activeCount = Math.max(8, Math.floor((fermentSim.progress / 100) * fermentSim.bubbles.length));
+          for (let i = 0; i < activeCount; i++) {
+            const b = fermentSim.bubbles[i];
+            if (fermentSim.running) {
+              b.y -= b.vy * (fermentSim.temp / 32);
+              if (b.y < 0.08) b.y = 0.92;
+            }
+            const bx = b.x * w;
+            const by = b.y * h;
+            const br = b.r * (0.6 + (fermentSim.progress / 100) * 0.9);
+
+            ctx.beginPath();
+            if (b.type === 'yeast') {
+              ctx.fillStyle = 'rgba(253, 224, 71, 0.35)';
+              ctx.strokeStyle = 'rgba(250, 204, 21, 0.9)';
+              ctx.arc(bx, by, br, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.stroke();
+            } else {
+              ctx.fillStyle = fermentSim.acidity > 75 ? 'rgba(248, 113, 113, 0.85)' : 'rgba(52, 211, 153, 0.75)';
+              ctx.rect(bx - 6, by - 2.5, 12, 5);
+              ctx.fill();
+            }
+          }
+
+          ctx.fillStyle = '#E0E7FF';
+          ctx.font = 'bold 12px "Noto Sans TC", sans-serif';
+          ctx.fillText('🔬 AR 微觀鏡：黃圈 = 酵母菌 CO₂ 氣泡（豬膏眼） | 綠桿 = 乳酸菌', 14, h - 52);
+        } else {
+          ctx.fillStyle = '#23140D';
+          ctx.fillRect(0, 0, w, h);
+
+          const cx = w / 2;
+          const cy = h / 2 + 6;
+          ctx.fillStyle = '#8B5A2B';
+          ctx.beginPath();
+          ctx.ellipse(cx, cy + 25, 155, 42, 0, 0, Math.PI * 2);
+          ctx.fill();
+
+          const cakeTopY = cy - 28 - (fermentSim.progress * 0.18);
+          ctx.fillStyle = fermentSim.acidity > 75 ? '#FEF08A' : '#FFFDF9';
+          ctx.strokeStyle = '#D6C7B2';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.rect(cx - 125, cakeTopY, 250, 62);
+          ctx.fill();
+          ctx.stroke();
+
+          const poreCols = 18;
+          const poreStrength = Math.min(1, fermentSim.progress / 90);
+          ctx.strokeStyle = fermentSim.acidity > 75 ? 'rgba(202, 138, 4, 0.55)' : 'rgba(120, 113, 108, 0.45)';
+          ctx.lineWidth = 1.4;
+          for (let c = 0; c < poreCols; c++) {
+            const px = cx - 112 + c * 13;
+            for (let r = 0; r < 4; r++) {
+              const py = cakeTopY + 10 + r * 13;
+              ctx.beginPath();
+              ctx.ellipse(px, py, 3.2 * poreStrength, 5.2 * poreStrength, 0, 0, Math.PI * 2);
+              ctx.stroke();
+            }
+          }
+
+          if (fermentSim.steamed) {
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.font = 'bold 14px "Noto Serif TC", serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('✨ 已出籠：順德倫教糕橫切面（橫豎小水泡「豬膏眼」）', cx, 62);
+            ctx.textAlign = 'left';
+          }
+        }
+      }
+
+      function stepFermentSimulation() {
+        if (!fermentSim.running) return;
+        const speedFactor = fermentSim.temp >= 30 ? (fermentSim.temp - 22) * 0.22 : 0.9;
+        fermentSim.progress = Math.min(100, fermentSim.progress + speedFactor);
+
+        let acidRate = 0.95;
+        if (fermentSim.temp > 39) acidRate += (fermentSim.temp - 39) * 0.35;
+        if (fermentSim.weather === 'summer') acidRate += 0.45;
+        if (fermentSim.progress > 92) acidRate += 1.6;
+        fermentSim.acidity = Math.min(100, fermentSim.acidity + acidRate);
+
+        if (Math.random() < 0.35) playSound('bubble');
+        updateFermentUI();
+        drawFermentCanvas();
+
+        if (fermentSim.progress >= 100 || fermentSim.acidity >= 100) {
+          stopAndEvaluateFerment(true);
+        }
+      }
+
+      function updateFermentUI() {
+        const p = Math.round(fermentSim.progress);
+        const a = Math.round(fermentSim.acidity);
+        document.getElementById('fermentProgressNum').textContent = p + '%';
+        document.getElementById('barFermentProgress').style.width = p + '%';
+        document.getElementById('fermentAcidNum').textContent = a + '%';
+        document.getElementById('barFermentAcid').style.width = a + '%';
+
+        const ph = (6.2 - (a / 100) * 2.4).toFixed(1);
+        const phEl = document.getElementById('fermentPhValue');
+        phEl.textContent = ph + (a > 75 ? ' (過酸！)' : a > 50 ? ' (微酸)' : ' (清甜)');
+        phEl.className = a > 75 ? 'text-red-400 font-bold' : 'text-emerald-400 font-bold';
+
+        const poreScore = Math.max(0, Math.min(100, Math.round(p * (a > 75 ? 0.65 : 1.04))));
+        document.getElementById('fermentPoreScore').textContent = poreScore + '%';
+      }
+
+      function stopAndEvaluateFerment(autoOverrun) {
+        fermentSim.running = false;
+        fermentSim.steamed = true;
+        if (fermentSim.timerId) {
+          clearInterval(fermentSim.timerId);
+          fermentSim.timerId = null;
+        }
+        const p = fermentSim.progress;
+        const a = fermentSim.acidity;
+        let stars = 1;
+        let msg = '';
+
+        if (p >= 82 && p <= 96 && a <= 75) {
+          stars = 3;
+          msg = '🎉 【三星非遺宗師！】你在產氣進度 ' + Math.round(p) + '% 時精準截停，且酸度控制在安全線內！蒸出的順德倫教糕晶瑩潔白、橫豎「豬膏眼」氣孔均勻彈牙，清甜不酸！';
+          playSound('success');
+          showToast('時光發酵坊三星通關！成功蒸出完美「豬膏眼」倫教糕！', '三星達成');
+        } else if (p >= 68 && a <= 85 && !autoOverrun) {
+          stars = 2;
+          msg = '👍 【二星熟手巧匠！】氣孔已初步成型（進度 ' + Math.round(p) + '%），略帶香港街頭白糖糕的微酸風味。若在 82%–96% 之間截停並保持 37°C，即可拿下三星！';
+          playSound('click');
+        } else {
+          stars = 1;
+          msg = a > 75
+            ? '🍋 【發酵過頭變酸啦！】乳酸菌過度繁殖（酸度 ' + Math.round(a) + '%），這正是早年香港街頭白糖糕變酸的原因！請調低溫度至 37°C 並在 82%–96% 截停。'
+            : '⏳ 【截停太早！】酵母菌產氣不足（僅 ' + Math.round(p) + '%），蒸出來的米糕死實無「豬膏眼」氣孔，請等到進度條進入綠色黃金區再截停！';
+          playSound('knock');
+        }
+
+        if (stars > appState.workshopStars.ferment) {
+          appState.workshopStars.ferment = stars;
+          updateHeaderScore();
+        }
+        document.getElementById('fermentStarsText').textContent = '★'.repeat(stars) + '☆'.repeat(3 - stars);
+        document.getElementById('fermentResultMessage').textContent = msg;
+        document.getElementById('fermentStatusLabel').textContent = '已截停蒸製 (' + stars + '星)';
+        drawFermentCanvas();
+      }
+
+      // =========================================================
+      // 5. WORKSHOP 2 SIMULATOR: 巧手木模坊 (咀香園杏仁餅)
+      // =========================================================
+      const moldSim = {
+        stage: 1,
+        pressure: 0,
+        pressing: false,
+        pressTimer: null,
+        knocks: 0,
+        cleanPercent: 0,
+        powderParticles: [],
+        micStream: null,
+        micTimer: null
+      };
+
+      function initMoldParticles() {
+        moldSim.powderParticles = [];
+        for (let i = 0; i < 65; i++) {
+          moldSim.powderParticles.push({
+            x: (Math.random() - 0.5) * 150,
+            y: (Math.random() - 0.5) * 150,
+            r: 2 + Math.random() * 3.5
+          });
+        }
+      }
+
+      function drawMoldCanvas() {
+        const canvas = document.getElementById('canvasMold');
+        if (!canvas) return;
+        const rect = canvas.parentElement.getBoundingClientRect();
+        if (rect.width > 0 && (canvas.width !== Math.floor(rect.width) || canvas.height !== Math.floor(rect.height))) {
+          canvas.width = Math.floor(rect.width);
+          canvas.height = Math.floor(rect.height);
+        }
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width;
+        const h = canvas.height;
+        const cx = w / 2;
+        const cy = h / 2 + 8;
+        ctx.clearRect(0, 0, w, h);
+
+        const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+        bgGrad.addColorStop(0, '#2C1810');
+        bgGrad.addColorStop(1, '#1A0E09');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.save();
+        if (moldSim.stage === 2 && moldSim.knocks > 0) {
+          ctx.translate((moldSim.knocks % 2 === 0 ? -3 : 3), 0);
+        }
+        ctx.fillStyle = '#6E3F22';
+        ctx.strokeStyle = '#9C633B';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.rect(cx - 190, cy - 34, 380, 68);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(cx, cy, 84, 0, Math.PI * 2);
+        ctx.fillStyle = '#4A2812';
+        ctx.fill();
+        ctx.strokeStyle = '#C48B54';
+        ctx.lineWidth = 4;
+        ctx.stroke();
+
+        if (moldSim.pressure > 0) {
+          const fillRadius = Math.min(78, 25 + (moldSim.pressure / 100) * 55);
+          ctx.beginPath();
+          ctx.arc(cx, cy, fillRadius, 0, Math.PI * 2);
+          ctx.fillStyle = moldSim.pressure > 86 ? '#D9A05B' : '#F4D58D';
+          ctx.fill();
+
+          ctx.strokeStyle = '#B45309';
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.arc(cx, cy, fillRadius - 8, 0, Math.PI * 2);
+          ctx.stroke();
+
+          ctx.fillStyle = '#92400E';
+          ctx.font = 'bold 28px "Noto Serif TC", serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('杏仁香餅', cx, cy);
+        }
+
+        if (moldSim.stage >= 2) {
+          const remainingRatio = 1 - moldSim.cleanPercent / 100;
+          const visibleCount = Math.floor(moldSim.powderParticles.length * remainingRatio);
+          ctx.fillStyle = '#FEF3C7';
+          for (let i = 0; i < visibleCount; i++) {
+            const pt = moldSim.powderParticles[i];
+            ctx.beginPath();
+            ctx.arc(cx + pt.x, cy + pt.y, pt.r, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+        ctx.restore();
+      }
+
+      function updateMoldUI() {
+        const p = Math.round(moldSim.pressure);
+        document.getElementById('moldPressureText').textContent = p + '%';
+        document.getElementById('barMoldPressure').style.width = p + '%';
+        document.getElementById('btnMoldKnock').textContent = '🔨 木槌敲模脫坯 (' + moldSim.knocks + '/3)';
+        document.getElementById('moldKnockStatus').textContent = moldSim.knocks + ' / 3 次（左、右、頂部）';
+        document.getElementById('moldCleanText').textContent = Math.round(moldSim.cleanPercent) + '%';
+        document.getElementById('barMoldClean').style.width = Math.round(moldSim.cleanPercent) + '%';
+
+        const stepEl = document.getElementById('moldStepIndicator');
+        const hintEl = document.getElementById('moldHintOverlay');
+        if (moldSim.stage === 1) {
+          stepEl.textContent = '當前工序：1/3 壓感填粉夾肉心';
+          hintEl.textContent = '長按「按住蓄力填粉」至 65%–85% 黃金區放開！';
+        } else if (moldSim.stage === 2) {
+          stepEl.textContent = '當前工序：2/3 木槌敲模震出餅坯';
+          hintEl.textContent = '點擊「木槌敲模脫坯」3 次震鬆杏仁餅坯！';
+        } else if (moldSim.stage === 3) {
+          stepEl.textContent = '當前工序：3/3 麥克風吹氣掃走餘粉';
+          hintEl.textContent = '點擊「吹氣掃走餘粉」或對麥克風吹氣清除表面粉粒！';
+        } else {
+          stepEl.textContent = '✅ 工序完成：中山石岐咀香園杏仁餅出爐！';
+          hintEl.textContent = '✨ 雕花清晰、鬆化甘香！';
+        }
+        drawMoldCanvas();
+      }
+
+      function finishMoldWorkshop() {
+        moldSim.stage = 4;
+        const p = moldSim.pressure;
+        let stars = 2;
+        let msg = '';
+        if (p >= 65 && p <= 85) {
+          stars = 3;
+          msg = '🎉 【三星木模巧匠！】你的填粉力道（' + Math.round(p) + '%）恰到好處，綠豆粉緊包冰肉心而不死實，經木槌三敲與吹氣掃粉後，梨木雙喜雕花纖毫畢現！';
+          playSound('success');
+          showToast('巧手木模坊三星通關！成功製作正宗炭焙杏仁餅！', '三星達成');
+        } else {
+          stars = 2;
+          msg = p < 65
+            ? '👍 【二星過關！】已學會填粉、敲模與吹粉三部曲，但填粉力道稍輕（' + Math.round(p) + '%），烘烤時邊緣較易鬆散；下次控制在 65%–85% 即可獲三星！'
+            : '👍 【二星過關！】工序完整，但按壓力道偏重（' + Math.round(p) + '%），杏仁餅口感略為偏實；控制在 65%–85% 綠區可獲三星！';
+          playSound('click');
+        }
+        if (stars > appState.workshopStars.mold) {
+          appState.workshopStars.mold = stars;
+          updateHeaderScore();
+        }
+        document.getElementById('moldStarsText').textContent = '★'.repeat(stars) + '☆'.repeat(3 - stars);
+        document.getElementById('moldResultMessage').textContent = msg;
+        updateMoldUI();
+      }
+
+      // =========================================================
+      // 6. WORKSHOP 3 SIMULATOR: 流體撞擊坊 (番禺沙灣薑撞奶)
+      // =========================================================
+      const fluidSim = {
+        milkTemp: 90.0,
+        tiltAngle: 55,
+        pourHeight: 25,
+        poured: false,
+        pouredTemp: 0,
+        coagulated: false,
+        spoonFloating: false,
+        spoonTested: false,
+        coolingInterval: null
+      };
+
+      function startFluidCooling() {
+        if (fluidSim.coolingInterval) clearInterval(fluidSim.coolingInterval);
+        fluidSim.coolingInterval = setInterval(function () {
+          if (appState.activeMainTab !== 'workshops' || appState.activeWorkshop !== 'fluid') return;
+          if (!fluidSim.poured && fluidSim.milkTemp > 60) {
+            fluidSim.milkTemp = Math.max(60, +(fluidSim.milkTemp - 0.35).toFixed(1));
+            updateFluidUI();
+            drawFluidCanvas();
+          }
+        }, 280);
+      }
+
+      function updateFluidUI() {
+        const t = fluidSim.milkTemp.toFixed(1);
+        const badge = document.getElementById('fluidTempBadge');
+        const isGolden = fluidSim.milkTemp >= 72 && fluidSim.milkTemp <= 78;
+        badge.textContent = '🌡️ 水牛奶溫度：' + t + '°C ' + (isGolden ? '（⚡黃金 75°C 撞奶瞬間！）' : fluidSim.milkTemp > 78 ? '（降溫中...請稍候）' : '（溫度過低，請重新加熱）');
+        badge.className = isGolden
+          ? 'px-3 py-1 rounded-md bg-emerald-600 text-white text-xs font-bold border border-emerald-300 animate-pulse-soft'
+          : 'px-3 py-1 rounded-md bg-red-900/90 text-white text-xs font-bold border border-red-400/40';
+
+        document.getElementById('fluidAngleBadge').textContent = '📐 傾倒角度：' + fluidSim.tiltAngle + '° | 高度：' + fluidSim.pourHeight + 'cm';
+        document.getElementById('labelFluidAngle').textContent = fluidSim.tiltAngle + '°';
+        document.getElementById('labelFluidHeight').textContent = fluidSim.pourHeight + ' cm';
+
+        const enzymeEl = document.getElementById('fluidEnzymeState');
+        if (isGolden) {
+          enzymeEl.textContent = '🔥 100% 巔峰活性（立即高處撞奶！）';
+          enzymeEl.className = 'text-emerald-700 font-bold';
+        } else if (fluidSim.milkTemp > 78) {
+          enzymeEl.textContent = '⚠️ 溫度過高（>80°C 蛋白酶易失活）';
+          enzymeEl.className = 'text-amber-700 font-bold';
+        } else {
+          enzymeEl.textContent = '❄️ 溫度過低（<70°C 凝結力不足）';
+          enzymeEl.className = 'text-sky-700 font-bold';
+        }
+      }
+
+      function drawFluidCanvas() {
+        const canvas = document.getElementById('canvasFluid');
+        if (!canvas) return;
+        const rect = canvas.parentElement.getBoundingClientRect();
+        if (rect.width > 0 && (canvas.width !== Math.floor(rect.width) || canvas.height !== Math.floor(rect.height))) {
+          canvas.width = Math.floor(rect.width);
+          canvas.height = Math.floor(rect.height);
+        }
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width;
+        const h = canvas.height;
+        ctx.clearRect(0, 0, w, h);
+
+        ctx.fillStyle = '#1B2430';
+        ctx.fillRect(0, 0, w, h);
+
+        const bowlX = w / 2;
+        const bowlY = h - 55;
+
+        const pitcherY = Math.max(48, bowlY - fluidSim.pourHeight * 6.2);
+        const pitcherX = bowlX - 65;
+        ctx.save();
+        ctx.translate(pitcherX, pitcherY);
+        ctx.rotate((fluidSim.tiltAngle * Math.PI) / 180);
+        ctx.fillStyle = '#E2E8F0';
+        ctx.strokeStyle = '#94A3B8';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.rect(-28, -22, 56, 44);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = '#CBD5E1';
+        ctx.beginPath();
+        ctx.moveTo(28, -12);
+        ctx.lineTo(44, -4);
+        ctx.lineTo(28, 6);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+
+        if (fluidSim.poured && !fluidSim.spoonTested) {
+          const grad = ctx.createLinearGradient(pitcherX + 25, pitcherY, bowlX, bowlY);
+          grad.addColorStop(0, '#FFFFFF');
+          grad.addColorStop(1, '#FEF08A');
+          ctx.strokeStyle = grad;
+          ctx.lineWidth = 10;
+          ctx.lineCap = 'round';
+          ctx.beginPath();
+          ctx.moveTo(pitcherX + 26, pitcherY + 10);
+          ctx.quadraticCurveTo(bowlX - 10, (pitcherY + bowlY) / 2, bowlX, bowlY - 12);
+          ctx.stroke();
+        }
+
+        ctx.fillStyle = fluidSim.poured ? '#FFFBEB' : '#FACC15';
+        ctx.beginPath();
+        ctx.ellipse(bowlX, bowlY - 14, 78, 22, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#F1F5F9';
+        ctx.strokeStyle = '#38BDF8';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(bowlX, bowlY - 14, 80, 0, Math.PI);
+        ctx.fill();
+        ctx.stroke();
+
+        if (fluidSim.spoonTested) {
+          const spoonY = fluidSim.spoonFloating ? bowlY - 16 : bowlY + 8;
+          ctx.fillStyle = '#FFFFFF';
+          ctx.strokeStyle = '#DC2626';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.ellipse(bowlX, spoonY, 28, 9, -0.15, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+          ctx.fillStyle = fluidSim.spoonFloating ? '#34D399' : '#F87171';
+          ctx.font = 'bold 13px "Noto Sans TC", sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(fluidSim.spoonFloating ? '✨ 湯匙穩穩浮於奶面！凝結完美！' : '💦 湯匙沉底了（凝結失敗）', bowlX, bowlY - 48);
+          ctx.textAlign = 'left';
+        }
+      }
+
+      // =========================================================
+      // 7. WORKSHOP 4 SIMULATOR: 酥皮千層坊 (蛋撻三摺四轉 & 煎堆淋油)
+      // =========================================================
+      const pastrySim = {
+        subMode: 'tart',
+        stepInTurn: 0,
+        turnsCompleted: 0,
+        layers: 2,
+        baked: false,
+        temp: 180,
+        jianduiBastes: 0,
+        jianduiRadius: 28
+      };
+
+      function drawPastryCanvas() {
+        const canvas = document.getElementById('canvasPastry');
+        if (!canvas) return;
+        const rect = canvas.parentElement.getBoundingClientRect();
+        if (rect.width > 0 && (canvas.width !== Math.floor(rect.width) || canvas.height !== Math.floor(rect.height))) {
+          canvas.width = Math.floor(rect.width);
+          canvas.height = Math.floor(rect.height);
+        }
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width;
+        const h = canvas.height;
+        const cx = w / 2;
+        const cy = h / 2 + 10;
+        ctx.clearRect(0, 0, w, h);
+
+        ctx.fillStyle = '#251710';
+        ctx.fillRect(0, 0, w, h);
+
+        if (pastrySim.subMode === 'tart') {
+          if (!pastrySim.baked) {
+            const doughW = pastrySim.stepInTurn === 0 ? 220 : pastrySim.stepInTurn === 1 ? 150 : 110;
+            const doughH = 110;
+            const startX = cx - doughW / 2;
+            const startY = cy - doughH / 2;
+
+            ctx.fillStyle = '#FDE68A';
+            ctx.strokeStyle = '#D97706';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.rect(startX, startY, doughW, doughH);
+            ctx.fill();
+            ctx.stroke();
+
+            const lineCount = Math.min(24, pastrySim.layers);
+            ctx.strokeStyle = '#B45309';
+            ctx.lineWidth = 1.2;
+            for (let i = 1; i < lineCount; i++) {
+              const ly = startY + (doughH / lineCount) * i;
+              ctx.beginPath();
+              ctx.moveTo(startX + 8, ly);
+              ctx.lineTo(startX + doughW - 8, ly);
+              ctx.stroke();
+            }
+
+            ctx.fillStyle = '#FEF3C7';
+            ctx.font = 'bold 13px "Noto Sans TC", sans-serif';
+            ctx.textAlign = 'center';
+            const nextActionText = pastrySim.turnsCompleted >= 4
+              ? '✅ 已完成 4 輪「三摺四轉」（162 層）！請點擊「注蛋漿入爐烘烤」'
+              : pastrySim.stepInTurn === 0
+              ? '👉 請點擊「1. 左摺三分一」'
+              : pastrySim.stepInTurn === 1
+              ? '👉 請點擊「2. 右摺覆蓋成三層」'
+              : '👉 請點擊「3. 旋轉 90° 開酥」完成第 ' + (pastrySim.turnsCompleted + 1) + ' 轉';
+            ctx.fillText(nextActionText, cx, h - 22);
+            ctx.textAlign = 'left';
+          } else {
+            ctx.fillStyle = '#D97706';
+            ctx.beginPath();
+            ctx.arc(cx, cy, 82, 0, Math.PI * 2);
+            ctx.fill();
+            for (let r = 80; r >= 58; r -= 4) {
+              ctx.strokeStyle = r % 8 === 0 ? '#FEF3C7' : '#92400E';
+              ctx.lineWidth = 2;
+              ctx.beginPath();
+              ctx.arc(cx, cy, r, 0, Math.PI * 2);
+              ctx.stroke();
+            }
+            const custGrad = ctx.createRadialGradient(cx - 12, cy - 12, 8, cx, cy, 56);
+            custGrad.addColorStop(0, '#FEF08A');
+            custGrad.addColorStop(0.7, '#F59E0B');
+            custGrad.addColorStop(1, '#D97706');
+            ctx.fillStyle = custGrad;
+            ctx.beginPath();
+            ctx.arc(cx, cy, 55, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        } else {
+          ctx.fillStyle = '#451A03';
+          ctx.strokeStyle = '#78350F';
+          ctx.lineWidth = 6;
+          ctx.beginPath();
+          ctx.arc(cx, cy + 10, 108, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = 'rgba(245, 158, 11, 0.35)';
+          ctx.beginPath();
+          ctx.arc(cx, cy + 10, 96, 0, Math.PI * 2);
+          ctx.fill();
+
+          const r = pastrySim.jianduiRadius;
+          const ballGrad = ctx.createRadialGradient(cx - r * 0.3, cy - r * 0.3, 5, cx, cy + 5, r);
+          ballGrad.addColorStop(0, '#FDE047');
+          ballGrad.addColorStop(0.7, '#D97706');
+          ballGrad.addColorStop(1, '#92400E');
+          ctx.fillStyle = ballGrad;
+          ctx.beginPath();
+          ctx.arc(cx, cy + 5, r, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = '#FFFBEB';
+          for (let i = 0; i < 24; i++) {
+            const ang = (i * 137.5 * Math.PI) / 180;
+            const dist = (i / 24) * (r - 6);
+            ctx.fillRect(cx + Math.cos(ang) * dist, cy + 5 + Math.sin(ang) * dist, 2.5, 2.5);
+          }
+
+          ctx.fillStyle = '#FDE68A';
+          ctx.font = 'bold 13px "Noto Sans TC", sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('🔄 點擊「畫圈淋熱油」令煎堆空心膨脹 (' + pastrySim.jianduiBastes + '/5 次)', cx, h - 20);
+          ctx.textAlign = 'left';
+        }
+      }
+
+      function updatePastryUI() {
+        document.getElementById('pastryFormulaBadge').textContent =
+          '📐 幾何層數公式：2 × 3^' + pastrySim.turnsCompleted + ' = ' + pastrySim.layers + ' 層（目標：162 層）';
+        document.getElementById('pastryLayerCountText').textContent =
+          pastrySim.layers + ' 層 (' + pastrySim.turnsCompleted + '/4 轉)';
+        const expandPct = Math.min(100, Math.round((pastrySim.jianduiRadius / 68) * 100));
+        document.getElementById('jianduiExpandText').textContent = expandPct + '% 飽滿';
+        drawPastryCanvas();
+      }
+
+      // =========================================================
+      // 8. HIGHLIGHT 1: AI「非遺餅印」個人化設計器 & 排行榜
+      // =========================================================
+      const moldLeaderboardData = [
+        { text: '明信', border: '萬字不斷紋', pastry: '中山石岐綠豆杏仁餅', author: '陳同學（聖保羅書院）', likes: 48 },
+        { text: '仁愛', border: '嶺南佳果紋', pastry: '廣式雙黃白蓮蓉月餅', author: '黃同學（拔萃女書院）', likes: 42 },
+        { text: '嶺南匠心', border: '雙喜祥雲紋', pastry: '中山石岐綠豆杏仁餅', author: '張同學（培正中學）', likes: 39 },
+        { text: '厚德載物', border: '錦鯉蓮花紋', pastry: '客家清明翠綠艾粄', author: '李同學（皇仁書院）', likes: 31 }
+      ];
+
+      let stampAnimScale = 1.0;
+
+      function drawCustomMoldCanvas() {
+        const canvas = document.getElementById('canvasCustomMold');
+        if (!canvas) return;
+        const rect = canvas.parentElement.getBoundingClientRect();
+        if (rect.width > 0 && (canvas.width !== Math.floor(rect.width) || canvas.height !== Math.floor(rect.height))) {
+          canvas.width = Math.floor(rect.width);
+          canvas.height = Math.floor(rect.height);
+        }
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width;
+        const h = canvas.height;
+        ctx.clearRect(0, 0, w, h);
+
+        ctx.fillStyle = '#22120B';
+        ctx.fillRect(0, 0, w, h);
+
+        const rawText = (document.getElementById('inputMoldText').value || '明信').trim().slice(0, 4);
+        const borderStyle = document.getElementById('selectMoldBorder').value;
+        const pastryType = document.getElementById('selectMoldPastryType').value;
+
+        const leftX = w * 0.28;
+        const rightX = w * 0.73;
+        const cy = h * 0.54;
+        const radius = Math.min(w * 0.19, h * 0.32, 92);
+
+        ctx.save();
+        ctx.fillStyle = '#5C3419';
+        ctx.strokeStyle = '#8C5832';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.rect(leftX - radius - 18, cy - radius - 35, (radius + 18) * 2, (radius + 35) * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(leftX, cy, radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#381D0C';
+        ctx.fill();
+        ctx.strokeStyle = '#A47148';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        drawMoldBorderPattern(ctx, leftX, cy, radius - 10, borderStyle, '#8C5832');
+
+        ctx.save();
+        ctx.translate(leftX, cy);
+        ctx.scale(-1, 1);
+        ctx.fillStyle = '#C49A6C';
+        ctx.font = '900 ' + (rawText.length <= 2 ? Math.round(radius * 0.58) : Math.round(radius * 0.42)) + 'px "Noto Serif TC", serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        drawStampCharacters(ctx, rawText, radius);
+        ctx.restore();
+
+        ctx.fillStyle = '#FDE68A';
+        ctx.font = 'bold 12px "Noto Sans TC", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('🪵 3D 梨木陰刻餅印（鏡像反字）', leftX, h - 16);
+        ctx.restore();
+
+        ctx.save();
+        ctx.translate(rightX, cy);
+        ctx.scale(stampAnimScale, stampAnimScale);
+
+        const palette = pastryType === 'mooncake'
+          ? { fill: '#B45309', rim: '#78350F', text: '#FEF3C7' }
+          : pastryType === 'hakka'
+          ? { fill: '#15803D', rim: '#14532D', text: '#DCFCE7' }
+          : { fill: '#F4D58D', rim: '#B45309', text: '#78350F' };
+
+        const petals = 16;
+        ctx.fillStyle = palette.fill;
+        ctx.strokeStyle = palette.rim;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        for (let i = 0; i < petals; i++) {
+          const ang = (i * 2 * Math.PI) / petals;
+          const px = Math.cos(ang) * (radius - 4);
+          const py = Math.sin(ang) * (radius - 4);
+          ctx.moveTo(px, py);
+          ctx.arc(px, py, 14, 0, Math.PI * 2);
+        }
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(0, 0, radius - 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        drawMoldBorderPattern(ctx, 0, 0, radius - 14, borderStyle, palette.rim);
+
+        ctx.fillStyle = palette.text;
+        ctx.font = '900 ' + (rawText.length <= 2 ? Math.round(radius * 0.58) : Math.round(radius * 0.42)) + 'px "Noto Serif TC", serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        drawStampCharacters(ctx, rawText, radius);
+        ctx.restore();
+
+        ctx.fillStyle = '#FDE68A';
+        ctx.font = 'bold 12px "Noto Sans TC", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('🥮 蓋印出爐成品（陽文正字）', rightX, h - 16);
+        ctx.textAlign = 'left';
+      }
+
+      function drawMoldBorderPattern(ctx, cx, cy, r, style, color) {
+        ctx.save();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.stroke();
+
+        const count = style === 'wanzi' ? 12 : 8;
+        for (let i = 0; i < count; i++) {
+          const a = (i * 2 * Math.PI) / count;
+          const x = cx + Math.cos(a) * (r - 6);
+          const y = cy + Math.sin(a) * (r - 6);
+          ctx.beginPath();
+          if (style === 'wanzi') {
+            ctx.rect(x - 3, y - 3, 6, 6);
+          } else {
+            ctx.arc(x, y, 4, 0, Math.PI * 2);
+          }
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      function drawStampCharacters(ctx, text, radius) {
+        if (text.length <= 2) {
+          ctx.fillText(text, 0, 2);
+        } else if (text.length === 3) {
+          ctx.fillText(text.slice(0, 2), 0, -radius * 0.22);
+          ctx.fillText(text.slice(2), 0, radius * 0.26);
+        } else {
+          ctx.fillText(text.slice(0, 2), 0, -radius * 0.22);
+          ctx.fillText(text.slice(2, 4), 0, radius * 0.24);
+        }
+      }
+
+      function renderMoldLeaderboard() {
+        const listEl = document.getElementById('moldLeaderboardList');
+        if (!listEl) return;
+        listEl.innerHTML = moldLeaderboardData.map(function (item, idx) {
+          return (
+            '<div class="bg-white border border-amber-200 rounded-xl p-2.5 flex items-center justify-between gap-2 shadow-sm">' +
+              '<div class="flex items-center gap-2.5 min-w-0">' +
+                '<div class="w-8 h-8 rounded-lg bg-amber-800 text-amber-100 font-serif-tc font-bold text-xs flex items-center justify-center shrink-0">' +
+                  item.text.slice(0, 2) +
+                '</div>' +
+                '<div class="min-w-0">' +
+                  '<div class="font-bold text-xs text-stone-900 truncate">「' + item.text + '」• ' + item.border + '</div>' +
+                  '<div class="text-[11px] text-stone-500 truncate">' + item.author + '</div>' +
+                '</div>' +
+              '</div>' +
+              '<button type="button" data-like-idx="' + idx + '" class="btn-like-mold px-2 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-xs shrink-0">' +
+                '👍 ' + item.likes +
+              '</button>' +
+            '</div>'
+          );
+        }).join('');
+
+        listEl.querySelectorAll('.btn-like-mold').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            const idx = parseInt(btn.getAttribute('data-like-idx'), 10);
+            if (moldLeaderboardData[idx]) {
+              moldLeaderboardData[idx].likes++;
+              playSound('click');
+              renderMoldLeaderboard();
+            }
+          });
+        });
+      }
+
+      // =========================================================
+      // 9. HIGHLIGHT 2: 「真・廚房」AR 實戰導航模式
+      // =========================================================
+      const arRecipes = {
+        lunjiao: {
+          name: '順德倫教糕（白糖糕）',
+          ingredients: [
+            { name: '粘米粉（早造米）', baseAmt: 75, unit: 'g (約半碗)', arLabel: '半碗粘米粉' },
+            { name: '白砂糖', baseAmt: 40, unit: 'g', arLabel: '白糖 40g' },
+            { name: '溫水', baseAmt: 150, unit: 'ml', arLabel: '清水 150ml' },
+            { name: '即溶酵母粉', baseAmt: 1.5, unit: 'g (半茶匙)', arLabel: '酵母半茶匙' }
+          ],
+          steps: [
+            { title: '步驟 1/4：調配半碗粘米粉漿（煮熟漿與生漿混合）', desc: '按 AR 投射圈指示，將半碗粘米粉與一半清水攪勻成生漿；另一半水加白糖煮沸後撞入生漿成「半熟米漿」。', tip: '🔬 飲食科學：部分糊化的澱粉能鎖住後續發酵產生的二氧化碳氣泡！', timerSec: 180 },
+            { title: '步驟 2/4：降溫至 37°C 加入酵母水', desc: '待米漿降溫至不燙手（約 37°C），加入酵母水攪勻。切記不可高於 45°C 以免燙死酵母菌！', tip: '🔬 飲食科學：37°C 為酵母菌無氧呼吸最活躍溫度。', timerSec: 120 },
+            { title: '步驟 3/4：保鮮紙封口溫暖處發酵', desc: '靜置溫暖處發酵至表面浮現細密氣泡（若想做出正宗不酸倫教糕，發酵時間控制在 45–60 分鐘內）。', tip: '🔬 飲食科學：截停時機決定「豬膏眼」氣孔與酸甜平衡。', timerSec: 300 },
+            { title: '步驟 4/4：猛火水滾入籠蒸 15 分鐘', desc: '蒸盤掃一層薄油，倒入米漿，大火蒸 15 分鐘至晶瑩剔透，放涼切件即成！', tip: '🔬 飲食科學：高溫蒸氣令氣泡急速膨脹並使米漿澱粉完全凝膠定型。', timerSec: 900 }
+          ]
+        },
+        gingermilk: {
+          name: '番禺沙灣薑撞奶',
+          ingredients: [
+            { name: '全脂水牛奶（或高鈣全脂奶）', baseAmt: 100, unit: 'ml', arLabel: '水牛奶 100ml' },
+            { name: '新鮮老薑汁（現磨壓汁）', baseAmt: 15, unit: 'ml (1湯匙)', arLabel: '老薑汁 1湯匙' },
+            { name: '幼砂糖', baseAmt: 8, unit: 'g', arLabel: '砂糖 8g' }
+          ],
+          steps: [
+            { title: '步驟 1/4：現磨老薑榨汁入碗', desc: '老薑磨蓉榨出薑汁，倒入碗底（AR 紅色量圈標示份量），撞奶前先將薑汁碗底沉澱的薑澱粉輕輕攪勻。', tip: '🔬 飲食科學：必須用新鮮老薑，薑汁放置超過 20 分鐘蛋白酶活性會大幅下降！', timerSec: 60 },
+            { title: '步驟 2/4：加熱水牛奶並降溫至 75°C', desc: '水牛奶加糖煮至微沸（約 85–90°C），熄火靜置降溫至 72°C–78°C 黃金窗口。', tip: '🔬 飲食科學：薑汁蛋白酶 (Zingibain) 在 75°C 催化酪蛋白凝結速度最快。', timerSec: 90 },
+            { title: '步驟 3/4：距離碗面 25cm 高處一氣呵成撞入', desc: '拿起奶鍋，從距離碗面約 25cm 高處快速將牛奶「撞」入薑汁碗中，撞完後千萬不可攪拌！', tip: '🔬 飲食科學：利用流體位能衝擊完成瞬間混勻，攪拌會破壞初生凝膠網。', timerSec: 30 },
+            { title: '步驟 4/4：加蓋靜置 3 分鐘・湯匙浮面測試', desc: '蓋上碟子靜置 3 分鐘，輕放瓷湯匙於表面，湯匙不沉即代表大功告成！', tip: '🔬 飲食科學：κ-酪蛋白已被酶解並形成三維網狀凝膠。', timerSec: 180 }
+          ]
+        },
+        tangbushuai: {
+          name: '東莞糖不甩',
+          ingredients: [
+            { name: '水磨糯米粉', baseAmt: 60, unit: 'g', arLabel: '糯米粉 60g' },
+            { name: '溫水', baseAmt: 48, unit: 'ml', arLabel: '溫水 48ml' },
+            { name: '片糖 / 黃糖', baseAmt: 30, unit: 'g', arLabel: '片糖 30g' },
+            { name: '熟花生碎與白芝麻', baseAmt: 20, unit: 'g', arLabel: '花生芝麻碎' }
+          ],
+          steps: [
+            { title: '步驟 1/3：溫水揉合糯米粉團搓圓', desc: '糯米粉加溫水揉成光滑不黏手的粉團，分成每粒約 15g 搓圓。', tip: '🔬 飲食科學：溫水使外層支鏈澱粉微糊化，搓圓時不易乾裂。', timerSec: 120 },
+            { title: '步驟 2/3：滾水煮至浮起脹大', desc: '放入滾水中煮至糯米丸子全部浮起，再慢火煮 2 分鐘至軟糯通透。', tip: '🔬 飲食科學：丸子內部水氣受熱使密度小於水而上浮。', timerSec: 150 },
+            { title: '步驟 3/3：黃糖薑汁掛漿・撒花生碎', desc: '鍋中煮溶片糖成濃稠糖膠，放入糯米丸子翻炒掛漿，盛起撒滿花生碎與芝麻！', tip: '🔬 飲食科學：高濃度糖漿具高黏度，寓意「甜蜜甩唔開」。', timerSec: 90 }
+          ]
+        },
+        eggtart: {
+          name: '港式酥皮蛋撻',
+          ingredients: [
+            { name: '全蛋液', baseAmt: 60, unit: 'g', arLabel: '全蛋液' },
+            { name: '三花淡奶 + 砂糖水', baseAmt: 75, unit: 'ml', arLabel: '淡奶糖水' },
+            { name: '水皮與油皮酥皮坯', baseAmt: 4, unit: '個', arLabel: '162層撻皮' }
+          ],
+          steps: [
+            { title: '步驟 1/3：三摺四轉開酥壓入菊花撻模', desc: '將完成「三摺四轉」的酥皮捏入菊花鋁模中，底部用叉刺小孔防止烘烤鼓起。', tip: '🔬 飲食科學：2 × 3⁴ = 162 層水油相間結構。', timerSec: 180 },
+            { title: '步驟 2/3：過篩黃金蛋漿注入八分滿', desc: '將蛋液、砂糖水與淡奶混合並過篩兩次濾走氣泡，注入撻皮至八分滿。', tip: '🔬 飲食科學：過篩消除表面張力氣泡，蒸烤後蛋面才會如鏡面般平滑。', timerSec: 90 },
+            { title: '步驟 3/3：200°C 高溫起酥轉慢火滑蛋', desc: '先以 200°C 烤 12 分鐘令酥皮層層爆開，再微開爐門降溫至 160°C 烤 6 分鐘定型。', tip: '🔬 飲食科學：避免蛋漿超過 90°C 沸騰產生蜂窩老孔。', timerSec: 720 }
+          ]
+        }
+      };
+
+      const arState = {
+        recipeKey: 'lunjiao',
+        servings: 2,
+        stepIndex: 0,
+        cameraActive: false,
+        cameraStream: null,
+        timerRemaining: 180,
+        timerRunning: false,
+        timerInterval: null
+      };
+
+      function updateARKitchenUI() {
+        const recipe = arRecipes[arState.recipeKey];
+        if (!recipe) return;
+        const step = recipe.steps[arState.stepIndex] || recipe.steps[0];
+
+        document.getElementById('arHudRecipeName').textContent = '🟢 AR 桌面定位完成：' + recipe.name + ' (' + arState.servings + '人份)';
+        document.getElementById('arHudStepBadge').textContent = '步驟 ' + (arState.stepIndex + 1) + ' / ' + recipe.steps.length;
+        document.getElementById('arStepTitle').textContent = step.title;
+        document.getElementById('arStepDesc').textContent = step.desc;
+        document.getElementById('arStepSciTip').textContent = step.tip;
+
+        const ingHtml = recipe.ingredients.map(function (ing) {
+          const scaled = +(ing.baseAmt * arState.servings).toFixed(1);
+          return '<div class="flex justify-between py-0.5 border-b border-stone-100"><span>• ' + ing.name + '</span><strong class="text-red-800">' + scaled + ' ' + ing.unit + '</strong></div>';
+        }).join('');
+        document.getElementById('arIngredientsList').innerHTML = ingHtml;
+
+        if (!arState.timerRunning) {
+          arState.timerRemaining = step.timerSec;
+          renderARTimerText();
+        }
+        drawARKitchenCanvas();
+      }
+
+      function renderARTimerText() {
+        const mins = String(Math.floor(arState.timerRemaining / 60)).padStart(2, '0');
+        const secs = String(arState.timerRemaining % 60).padStart(2, '0');
+        document.getElementById('arTimerDisplay').textContent = mins + ':' + secs;
+      }
+
+      function drawARKitchenCanvas() {
+        const canvas = document.getElementById('canvasARKitchen');
+        if (!canvas) return;
+        const rect = canvas.parentElement.getBoundingClientRect();
+        if (rect.width > 0 && (canvas.width !== Math.floor(rect.width) || canvas.height !== Math.floor(rect.height))) {
+          canvas.width = Math.floor(rect.width);
+          canvas.height = Math.floor(rect.height);
+        }
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width;
+        const h = canvas.height;
+        ctx.clearRect(0, 0, w, h);
+
+        if (!arState.cameraActive) {
+          const tableGrad = ctx.createLinearGradient(0, 0, 0, h);
+          tableGrad.addColorStop(0, '#1C1917');
+          tableGrad.addColorStop(0.35, '#292524');
+          tableGrad.addColorStop(1, '#44403C');
+          ctx.fillStyle = tableGrad;
+          ctx.fillRect(0, 0, w, h);
+        }
+
+        ctx.strokeStyle = 'rgba(16, 185, 129, 0.35)';
+        ctx.lineWidth = 1;
+        for (let i = 0; i <= 8; i++) {
+          const xTop = w * 0.15 + (w * 0.7 * i) / 8;
+          const xBot = (w * i) / 8;
+          ctx.beginPath();
+          ctx.moveTo(xTop, h * 0.38);
+          ctx.lineTo(xBot, h);
+          ctx.stroke();
+        }
+        for (let r = 0; r <= 4; r++) {
+          const y = h * 0.38 + ((h * 0.62) * r) / 4;
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(w, y);
+          ctx.stroke();
+        }
+
+        const recipe = arRecipes[arState.recipeKey];
+        const count = recipe.ingredients.length;
+        recipe.ingredients.forEach(function (ing, idx) {
+          const rx = (w / (count + 1)) * (idx + 1);
+          const ry = h * 0.66 + (idx % 2 === 0 ? -12 : 18);
+          const radius = 34 + Math.min(20, arState.servings * 4);
+
+          ctx.strokeStyle = idx === 0 ? '#34D399' : idx === 1 ? '#FBBF24' : '#38BDF8';
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.ellipse(rx, ry, radius, radius * 0.55, 0, 0, Math.PI * 2);
+          ctx.stroke();
+
+          ctx.fillStyle = 'rgba(16, 185, 129, 0.15)';
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.moveTo(rx, ry - 10);
+          ctx.lineTo(rx, ry - 52);
+          ctx.stroke();
+
+          const scaled = +(ing.baseAmt * arState.servings).toFixed(1);
+          const label = ing.arLabel + ' (' + scaled + ing.unit.split(' ')[0] + ')';
+          ctx.fillStyle = 'rgba(0,0,0,0.8)';
+          ctx.fillRect(rx - 58, ry - 74, 116, 22);
+          ctx.fillStyle = '#ECFDF5';
+          ctx.font = 'bold 11px "Noto Sans TC", sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(label, rx, ry - 59);
+        });
+        ctx.textAlign = 'left';
+      }
+
+      // =========================================================
+      // 10. HIGHLIGHT 3: 「AI 大廚」視覺評分系統 & 電子證書
+      // =========================================================
+      const aiChefSamples = {
+        lunjiao_good: {
+          title: '順德倫教糕（白糖糕）實作樣本',
+          score: 96,
+          stars: 5,
+          comment: '「後生仔好手勢！呢件倫教糕橫豎『豬膏眼』氣孔均勻通透，米香清甜完全無酸味，睇得出你喺發酵溫控同截停時機拿捏得極準，有齊順德老師傅嘅九成功架！」',
+          metrics: [
+            { label: '氣孔均勻度（豬膏眼）', val: 96 },
+            { label: '米漿光澤與通透度', val: 95 },
+            { label: '發酵酸鹼平衡度', val: 98 },
+            { label: '切件邊緣完整度', val: 94 }
+          ]
+        },
+        almond_good: {
+          title: '中山石岐手壓杏仁餅實作樣本',
+          score: 94,
+          stars: 5,
+          comment: '「好餅印！綠豆粉同冰肉心壓得鬆緊適中，木槌脫模邊角齊整，雙喜雕花紋路清晰立體，炭焙色澤金黃，完全做到石岐咀香園『入口鬆化、齒頰留香』嘅精髓！」',
+          metrics: [
+            { label: '木模雕花清晰度', val: 96 },
+            { label: '餅坯邊緣完整度', val: 93 },
+            { label: '炭焙金黃色澤度', val: 95 },
+            { label: '粉粒吹掃潔淨度', val: 92 }
+          ]
+        },
+        ginger_good: {
+          title: '番禺沙灣 75°C 薑撞奶實作樣本',
+          score: 95,
+          stars: 5,
+          comment: '「一撞即凝！水牛奶同老薑汁喺黃金 75°C 完美交融，凝結出好似豆腐花咁嫩滑嘅膏體，連瓷湯匙放上去都穩陣浮起，盡得沙灣古鎮非遺真傳！」',
+          metrics: [
+            { label: '酪蛋白凝結緊實度', val: 97 },
+            { label: '表面鏡面平滑度', val: 95 },
+            { label: '湯匙浮面承托力', val: 96 },
+            { label: '薑汁水牛奶融合度', val: 93 }
+          ]
+        },
+        lunjiao_dense: {
+          title: '倫教糕（發酵不足氣孔偏少樣本）',
+          score: 78,
+          stars: 4,
+          comment: '「唔緊要，萬事起頭難！AI 視覺檢測發現下半部氣孔偏密（似『死麵底』），應該係發酵溫度低過 32°C 或者太早入籠蒸製。下次將發酵箱調到 37°C 等氣泡去到 85% 再蒸就滿分喇！」',
+          metrics: [
+            { label: '氣孔均勻度（豬膏眼）', val: 72 },
+            { label: '米漿光澤與通透度', val: 82 },
+            { label: '發酵酸鹼平衡度', val: 85 },
+            { label: '切件邊緣完整度', val: 75 }
+          ]
+        }
+      };
+
+      let currentAISampleKey = 'lunjiao_good';
+      let uploadedCustomImage = null;
+
+      function renderAIChefAssessment(sampleKey) {
+        currentAISampleKey = sampleKey;
+        const data = aiChefSamples[sampleKey] || aiChefSamples.lunjiao_good;
+        document.getElementById('aiChefScoreBadge').innerHTML =
+          '<span class="text-xl font-black text-red-800">' + data.score + ' 分</span>' +
+          '<div class="text-xs text-amber-500 font-bold">' + '⭐'.repeat(data.stars) + '</div>';
+        document.getElementById('aiChefCommentText').textContent = data.comment;
+
+        document.getElementById('aiMetricsContainer').innerHTML = data.metrics.map(function (m) {
+          return (
+            '<div class="bg-amber-50/70 p-2 rounded-lg border border-amber-200">' +
+              '<div class="flex justify-between font-semibold mb-1"><span>' + m.label + '</span><span class="text-red-800 font-bold">' + m.val + '%</span></div>' +
+              '<div class="w-full h-2 bg-stone-200 rounded-full overflow-hidden">' +
+                '<div class="h-full bg-emerald-600" style="width:' + m.val + '%"></div>' +
+              '</div>' +
+            '</div>'
+          );
+        }).join('');
+
+        drawAIChefScanCanvas();
+        drawCertificateCanvas();
+      }
+
+      function drawAIChefScanCanvas() {
+        const canvas = document.getElementById('canvasAIChefScan');
+        if (!canvas) return;
+        const rect = canvas.parentElement.getBoundingClientRect();
+        if (rect.width > 0 && (canvas.width !== Math.floor(rect.width) || canvas.height !== Math.floor(rect.height))) {
+          canvas.width = Math.floor(rect.width);
+          canvas.height = Math.floor(rect.height);
+        }
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width;
+        const h = canvas.height;
+        const cx = w / 2;
+        const cy = h / 2;
+        ctx.clearRect(0, 0, w, h);
+
+        ctx.fillStyle = '#0F172A';
+        ctx.fillRect(0, 0, w, h);
+
+        if (uploadedCustomImage) {
+          ctx.drawImage(uploadedCustomImage, cx - 120, cy - 85, 240, 170);
+        } else if (currentAISampleKey === 'almond_good') {
+          ctx.fillStyle = '#F4D58D';
+          ctx.beginPath();
+          ctx.arc(cx, cy, 72, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = '#B45309';
+          ctx.lineWidth = 4;
+          ctx.stroke();
+          ctx.fillStyle = '#92400E';
+          ctx.font = 'bold 24px "Noto Serif TC", serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('咀香杏仁', cx, cy + 8);
+        } else if (currentAISampleKey === 'ginger_good') {
+          ctx.fillStyle = '#FFFBEB';
+          ctx.beginPath();
+          ctx.arc(cx, cy, 76, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = '#FFFFFF';
+          ctx.strokeStyle = '#DC2626';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.ellipse(cx, cy, 34, 12, -0.1, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+        } else {
+          ctx.fillStyle = '#FFFDF9';
+          ctx.fillRect(cx - 115, cy - 48, 230, 96);
+          ctx.strokeStyle = 'rgba(120,113,108,0.55)';
+          const cols = currentAISampleKey === 'lunjiao_dense' ? 8 : 16;
+          for (let c = 0; c < cols; c++) {
+            for (let r = 0; r < 4; r++) {
+              ctx.beginPath();
+              ctx.ellipse(cx - 100 + c * (200 / cols), cy - 32 + r * 20, 3.5, 6, 0, 0, Math.PI * 2);
+              ctx.stroke();
+            }
+          }
+        }
+
+        ctx.strokeStyle = '#10B981';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(cx - 130, cy - 68, 260, 136);
+        ctx.fillStyle = '#10B981';
+        ctx.font = 'bold 11px monospace';
+        ctx.textAlign = 'left';
+        const data = aiChefSamples[currentAISampleKey] || aiChefSamples.lunjiao_good;
+        ctx.fillText('CONFIDENCE: ' + data.score + '.4% | PORE_MESH: DETECTED', cx - 126, cy - 74);
+      }
+
+      function drawCertificateCanvas() {
+        const canvas = document.getElementById('canvasCertificate');
+        if (!canvas) return;
+        canvas.width = 640;
+        canvas.height = 300;
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width;
+        const h = canvas.height;
+
+        ctx.fillStyle = '#FFFDF5';
+        ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = '#9E2A2B';
+        ctx.lineWidth = 6;
+        ctx.strokeRect(12, 12, w - 24, h - 24);
+        ctx.strokeStyle = '#D97706';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(20, 20, w - 40, h - 40);
+
+        const studentName = (document.getElementById('inputCertName').value || '陳曉明').trim();
+        const schoolName = (document.getElementById('inputCertSchool').value || '香港嶺南示範中學').trim();
+        const sample = aiChefSamples[currentAISampleKey] || aiChefSamples.lunjiao_good;
+
+        ctx.fillStyle = '#9E2A2B';
+        ctx.font = '900 24px "Noto Serif TC", serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('《尋味嶺南：非遺小吃傳承人榮譽證書》', w / 2, 62);
+
+        ctx.fillStyle = '#291D16';
+        ctx.font = 'bold 16px "Noto Sans TC", sans-serif';
+        ctx.fillText('茲證明  ' + schoolName + '  【 ' + studentName + ' 】同學', w / 2, 108);
+
+        ctx.font = '14px "Noto Sans TC", sans-serif';
+        ctx.fillStyle = '#44403C';
+        ctx.fillText('於《尋味嶺南：非遺小吃造物局》完成四大非遺工藝修煉與 AI 實作評核', w / 2, 142);
+        ctx.fillText('實作項目：' + sample.title + '（AI 視覺評分：' + sample.score + ' 分 • 五星匠人認證）', w / 2, 170);
+
+        ctx.fillStyle = '#B45309';
+        ctx.font = 'bold 13px "Noto Serif TC", serif';
+        ctx.fillText('「味覺尋根・體悟匠心・港粵同源・薪火相傳」', w / 2, 208);
+
+        ctx.strokeStyle = 'rgba(185, 28, 28, 0.85)';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(w - 140, h - 92, 92, 54);
+        ctx.fillStyle = 'rgba(185, 28, 28, 0.85)';
+        ctx.font = 'bold 13px "Noto Serif TC", serif';
+        ctx.fillText('嶺南非遺', w - 94, h - 68);
+        ctx.fillText('造物總局印', w - 94, h - 50);
+
+        ctx.fillStyle = '#57534E';
+        ctx.font = '12px "Noto Sans TC", sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText('頒發日期：2026年10月16日  |  認證導師：省港非遺點心泰斗 陳師傅', 38, h - 42);
+      }
+
+      // =========================================================
+      // 11. TAB 4: GREATER BAY AREA LINEAGE INTERACTIVE MAP
+      // =========================================================
+      const cityNodes = {
+        shunde: {
+          name: '佛山順德',
+          x: 0.34, y: 0.45,
+          title: '佛山順德 ➔ 香港深水埗 / 九龍城 / 佐敦',
+          history: '順德素有「中國廚師之鄉」美譽。清末民初大批「順德媽姐（自梳女）」與順德廚師南下香港打工或開舖，將順德倫教糕（演變為香港街頭白糖糕）及順德雙皮奶（成就香港義順、澳洲牛奶公司等甜品文化）帶到香江。',
+          snacks: '代表同源小吃：#1 順德倫教糕（白糖糕）、#8 順德雙皮奶'
+        },
+        zhongshan: {
+          name: '中山石岐',
+          x: 0.38, y: 0.66,
+          title: '中山石岐 ➔ 香港元朗老字號唐餅家 / 中環',
+          history: '中山石岐咀香園於 1918 年首創綠豆夾肉心杏仁餅。省港餅師往來頻繁，將梨木餅印雕刻與炭焙技術傳入香港，啟發香港元朗唐餅世家與本地手信文化。',
+          snacks: '代表同源小吃：#4 中山咀香園杏仁餅'
+        },
+        panyu: {
+          name: '番禺沙灣',
+          x: 0.45, y: 0.42,
+          title: '廣州番禺沙灣古鎮 ➔ 香港傳統甜品舖',
+          history: '番禺沙灣古鎮擁有數百年水牛奶養殖歷史，首創 75°C 高處撞奶凝結技藝。隨番禺鄉親移居香港，薑撞奶成為香港街坊冬日必吃的暖胃非遺甜品。',
+          snacks: '代表同源小吃：#7 番禺沙灣薑撞奶'
+        },
+        guangzhou: {
+          name: '廣州西關',
+          x: 0.42, y: 0.25,
+          title: '廣州西關四大茶樓 ➔ 香港上環 / 中環茶樓與冰室',
+          history: '1920 年代廣州茶樓首創「星期美點」，研發出酥皮蛋撻、老麵叉燒包、蓮蓉月餅與成珠樓雞仔餅。「省港一體」讓這些名點在香港茶餐廳與酒樓發揚光大，更列入香港非遺清單。',
+          snacks: '代表同源小吃：#2 廣式叉燒包、#5 廣式蓮蓉月餅、#9 港式絲襪奶茶、#10 港式酥皮蛋撻、#11 廣州雞仔餅'
+        },
+        dongguan: {
+          name: '東莞水鄉',
+          x: 0.58, y: 0.36,
+          title: '東莞茶山/石龍 ➔ 香港新界與九龍傳統年宵',
+          history: '東莞與香港地緣緊密，東莞「糖不甩」與「年晚煎堆」隨東莞移民傳入香港，成為香港家庭農曆新年「煎堆轆轆，金銀滿屋」及糖水舖必備美點。',
+          snacks: '代表同源小吃：#12 東莞糖不甩 / 煎堆'
+        },
+        xinhui: {
+          name: '新會 / 客家',
+          x: 0.20, y: 0.72,
+          title: '江門新會 / 惠梅客家 ➔ 香港上環南北行 & 新界圍村',
+          history: '新會大紅柑陳皮經香港南北行行銷全球，成就港式陳皮紅豆沙；而客家先民定居香港新界與大澳，則將「客家艾粄」傳承為港人熟知的「茶果」。',
+          snacks: '代表同源小吃：#3 新會陳皮紅豆沙、#6 客家艾粄 / 茶果'
+        }
+      };
+
+      let selectedCityKey = 'shunde';
+
+      function drawLineageMapCanvas() {
+        const canvas = document.getElementById('canvasLineageMap');
+        if (!canvas) return;
+        const rect = canvas.parentElement.getBoundingClientRect();
+        if (rect.width > 0 && (canvas.width !== Math.floor(rect.width) || canvas.height !== Math.floor(rect.height))) {
+          canvas.width = Math.floor(rect.width);
+          canvas.height = Math.floor(rect.height);
+        }
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width;
+        const h = canvas.height;
+        ctx.clearRect(0, 0, w, h);
+
+        ctx.fillStyle = '#14212F';
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.fillStyle = '#1E3A5F';
+        ctx.beginPath();
+        ctx.moveTo(w * 0.45, h * 0.28);
+        ctx.lineTo(w * 0.56, h * 0.55);
+        ctx.lineTo(w * 0.68, h * 0.85);
+        ctx.lineTo(w * 0.38, h * 0.90);
+        ctx.lineTo(w * 0.41, h * 0.55);
+        ctx.closePath();
+        ctx.fill();
+
+        const hkX = w * 0.74;
+        const hkY = h * 0.76;
+
+        Object.keys(cityNodes).forEach(function (key) {
+          const node = cityNodes[key];
+          const nx = node.x * w;
+          const ny = node.y * h;
+          const isSelected = key === selectedCityKey;
+
+          ctx.strokeStyle = isSelected ? '#F59E0B' : 'rgba(245, 158, 11, 0.28)';
+          ctx.lineWidth = isSelected ? 3.5 : 1.5;
+          ctx.beginPath();
+          ctx.moveTo(nx, ny);
+          ctx.quadraticCurveTo((nx + hkX) / 2, Math.min(ny, hkY) - 28, hkX, hkY);
+          ctx.stroke();
+
+          ctx.fillStyle = isSelected ? '#DC2626' : '#FDE68A';
+          ctx.beginPath();
+          ctx.arc(nx, ny, isSelected ? 10 : 7, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = isSelected ? '#FEF08A' : '#CBD5E1';
+          ctx.font = (isSelected ? 'bold 13px ' : '12px ') + '"Noto Sans TC", sans-serif';
+          ctx.fillText(node.name, nx - 24, ny - 14);
+        });
+
+        ctx.fillStyle = '#10B981';
+        ctx.beginPath();
+        ctx.arc(hkX, hkY, 13, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#A7F3D0';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        ctx.fillStyle = '#ECFDF5';
+        ctx.font = 'bold 14px "Noto Serif TC", serif';
+        ctx.fillText('🇭🇰 香港（匯聚百味）', hkX - 45, hkY + 28);
+      }
+
+      // =========================================================
+      // 12. NAVIGATION & EVENT BINDINGS
+      // =========================================================
+      function switchMainTab(tabName) {
+        appState.activeMainTab = tabName;
+        playSound('click');
+        document.querySelectorAll('.main-tab-panel').forEach(function (panel) {
+          panel.classList.toggle('hidden', panel.id !== 'tab-' + tabName);
+        });
+        document.querySelectorAll('.main-nav-btn').forEach(function (btn) {
+          const active = btn.getAttribute('data-main-tab') === tabName;
+          btn.className = active
+            ? 'main-nav-btn px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap transition bg-amber-500 text-stone-950 shadow'
+            : 'main-nav-btn px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap transition text-amber-200/80 hover:bg-amber-900/40';
+        });
+
+        setTimeout(function () {
+          drawFermentCanvas();
+          drawMoldCanvas();
+          drawFluidCanvas();
+          drawPastryCanvas();
+          drawCustomMoldCanvas();
+          drawARKitchenCanvas();
+          drawAIChefScanCanvas();
+          drawCertificateCanvas();
+          drawLineageMapCanvas();
+        }, 40);
+      }
+
+      function switchWorkshop(wsKey) {
+        appState.activeWorkshop = wsKey;
+        playSound('click');
+        document.querySelectorAll('.workshop-panel').forEach(function (p) {
+          p.classList.toggle('hidden', p.id !== 'ws-panel-' + wsKey);
+        });
+        document.querySelectorAll('.workshop-select-btn').forEach(function (b) {
+          const active = b.getAttribute('data-workshop') === wsKey;
+          b.className = active
+            ? 'workshop-select-btn text-left p-3.5 rounded-xl border-2 transition wood-card border-red-800 ring-2 ring-red-800/30'
+            : 'workshop-select-btn text-left p-3.5 rounded-xl border-2 transition wood-card border-amber-200 hover:border-amber-500';
+        });
+        setTimeout(function () {
+          drawFermentCanvas();
+          drawMoldCanvas();
+          drawFluidCanvas();
+          drawPastryCanvas();
+        }, 40);
+      }
+
+      function switchHighlightTab(hlKey) {
+        appState.activeHighlight = hlKey;
+        playSound('click');
+        document.querySelectorAll('.highlight-panel').forEach(function (p) {
+          p.classList.toggle('hidden', p.id !== 'hl-panel-' + hlKey);
+        });
+        document.querySelectorAll('.highlight-tab-btn').forEach(function (b) {
+          const active = b.getAttribute('data-highlight-tab') === hlKey;
+          b.className = active
+            ? 'highlight-tab-btn text-left p-4 rounded-xl border-2 transition wood-card border-red-800 ring-2 ring-red-800/30'
+            : 'highlight-tab-btn text-left p-4 rounded-xl border-2 transition wood-card border-amber-200 hover:border-amber-500';
+        });
+        setTimeout(function () {
+          drawCustomMoldCanvas();
+          drawARKitchenCanvas();
+          drawAIChefScanCanvas();
+          drawCertificateCanvas();
+        }, 40);
+      }
+
+      window.addEventListener('DOMContentLoaded', function () {
+        initFermentBubbles();
+        initMoldParticles();
+        renderSnacksGrid('all');
+        renderMoldLeaderboard();
+        updateARKitchenUI();
+        renderAIChefAssessment('lunjiao_good');
+        startFluidCooling();
+
+        document.querySelectorAll('.main-nav-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            switchMainTab(btn.getAttribute('data-main-tab'));
+          });
+        });
+
+        document.getElementById('heroBtnStartWorkshop').addEventListener('click', function () {
+          switchMainTab('workshops');
+        });
+        document.getElementById('heroBtnTryAI').addEventListener('click', function () {
+          switchMainTab('highlights');
+        });
+
+        document.getElementById('btnToggleSound').addEventListener('click', function () {
+          appState.soundEnabled = !appState.soundEnabled;
+          document.getElementById('soundIcon').textContent = appState.soundEnabled ? '🔊' : '🔇';
+          document.getElementById('soundLabel').textContent = appState.soundEnabled ? '音效開啟' : '音效靜音';
+          if (appState.soundEnabled) playSound('click');
+        });
+
+        document.getElementById('btnJudgeDemo').addEventListener('click', function () {
+          appState.workshopStars = { ferment: 3, mold: 3, fluid: 3, pastry: 3 };
+          updateHeaderScore();
+          playSound('success');
+          showToast('已解鎖四大工坊全三星通關與電子傳承人證書！', '評審速覽');
+        });
+
+        document.querySelectorAll('.workshop-select-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            switchWorkshop(btn.getAttribute('data-workshop'));
+          });
+        });
+
+        // Workshop 1 Events
+        document.getElementById('btnToggleMicroscope').addEventListener('click', function () {
+          fermentSim.microscope = !fermentSim.microscope;
+          playSound('click');
+          document.getElementById('microscopeBtnText').textContent = fermentSim.microscope ? '返回宏觀蒸籠視角' : '開啟「AR 微觀鏡」視角';
+          document.getElementById('fermentViewBadge').textContent = fermentSim.microscope ? '🔬 AR 酵母菌微觀鏡視角' : '👁️ 宏觀米漿發酵視角';
+          drawFermentCanvas();
+        });
+
+        document.getElementById('selectFermentWeather').addEventListener('change', function (e) {
+          fermentSim.weather = e.target.value;
+          const labels = {
+            spring: '🌤️ 當前天氣：春季潮濕 (22°C)',
+            summer: '☀️ 當前天氣：夏季酷熱 (33°C・易變酸)',
+            autumn: '🍂 當前天氣：秋風乾爽 (25°C)',
+            winter: '❄️ 當前天氣：寒冬低溫 (14°C)'
+          };
+          document.getElementById('fermentWeatherBadge').textContent = labels[fermentSim.weather];
+        });
+
+        document.getElementById('sliderFermentTemp').addEventListener('input', function (e) {
+          fermentSim.temp = parseInt(e.target.value, 10);
+          document.getElementById('labelFermentTemp').textContent = fermentSim.temp + '°C';
+        });
+
+        document.getElementById('sliderFermentHumidity').addEventListener('input', function (e) {
+          fermentSim.humidity = parseInt(e.target.value, 10);
+          document.getElementById('labelFermentHumidity').textContent = fermentSim.humidity + '%';
+        });
+
+        document.getElementById('btnFermentStart').addEventListener('click', function () {
+          if (fermentSim.running) return;
+          if (fermentSim.progress >= 100 || fermentSim.steamed) {
+            fermentSim.progress = 0;
+            fermentSim.acidity = 12;
+            fermentSim.steamed = false;
+          }
+          fermentSim.running = true;
+          document.getElementById('fermentStatusLabel').textContent = '發酵進行中...';
+          playSound('bubble');
+          if (fermentSim.timerId) clearInterval(fermentSim.timerId);
+          fermentSim.timerId = setInterval(stepFermentSimulation, 180);
+        });
+
+        document.getElementById('btnFermentStop').addEventListener('click', function () {
+          stopAndEvaluateFerment(false);
+        });
+
+        document.getElementById('btnFermentReset').addEventListener('click', function () {
+          fermentSim.running = false;
+          fermentSim.steamed = false;
+          if (fermentSim.timerId) clearInterval(fermentSim.timerId);
+          fermentSim.progress = 0;
+          fermentSim.acidity = 12;
+          document.getElementById('fermentStatusLabel').textContent = '待啟動發酵';
+          document.getElementById('fermentResultMessage').textContent = '已重置米漿！點擊「開始發酵計時」，在進度達 82%–96% 時按下「精準截停・入籠蒸製」。';
+          updateFermentUI();
+          drawFermentCanvas();
+        });
+
+        // Workshop 2 Events
+        function startPressingMold() {
+          if (moldSim.stage !== 1) return;
+          moldSim.pressing = true;
+          if (moldSim.pressTimer) clearInterval(moldSim.pressTimer);
+          moldSim.pressTimer = setInterval(function () {
+            moldSim.pressure = Math.min(100, moldSim.pressure + 4);
+            updateMoldUI();
+          }, 60);
+        }
+
+        function stopPressingMold() {
+          if (!moldSim.pressing) return;
+          moldSim.pressing = false;
+          if (moldSim.pressTimer) {
+            clearInterval(moldSim.pressTimer);
+            moldSim.pressTimer = null;
+          }
+          if (moldSim.pressure >= 30) {
+            moldSim.stage = 2;
+            playSound('click');
+            document.getElementById('moldResultMessage').textContent =
+              '填粉完成（緊實度 ' + Math.round(moldSim.pressure) + '%）！第二步：點擊「木槌敲模脫坯」3 次震出杏仁餅坯！';
+            updateMoldUI();
+          }
+        }
+
+        const btnMoldPress = document.getElementById('btnMoldPress');
+        btnMoldPress.addEventListener('mousedown', startPressingMold);
+        btnMoldPress.addEventListener('touchstart', function (e) { e.preventDefault(); startPressingMold(); });
+        window.addEventListener('mouseup', stopPressingMold);
+        window.addEventListener('touchend', stopPressingMold);
+
+        btnMoldPress.addEventListener('click', function () {
+          if (moldSim.stage === 1 && moldSim.pressure < 30) {
+            moldSim.pressure = Math.min(100, moldSim.pressure + 38);
+            if (moldSim.pressure >= 65) {
+              moldSim.stage = 2;
+            }
+            updateMoldUI();
+          }
+        });
+
+        document.getElementById('btnMoldKnock').addEventListener('click', function () {
+          if (moldSim.stage === 1 && moldSim.pressure === 0) {
+            moldSim.pressure = 75;
+            moldSim.stage = 2;
+          }
+          if (moldSim.stage === 2) {
+            moldSim.knocks = Math.min(3, moldSim.knocks + 1);
+            playSound('knock');
+            if (moldSim.knocks >= 3) {
+              moldSim.stage = 3;
+              document.getElementById('moldResultMessage').textContent =
+                '木槌三敲脫模成功！最後一步：點擊「吹氣掃走餘粉」或開啟麥克風對手機吹氣，清除表面多餘綠豆粉！';
+            }
+            updateMoldUI();
+          }
+        });
+
+        document.getElementById('btnMoldBlow').addEventListener('click', function () {
+          if (moldSim.stage < 3) {
+            moldSim.pressure = moldSim.pressure || 76;
+            moldSim.knocks = 3;
+            moldSim.stage = 3;
+          }
+          moldSim.cleanPercent = Math.min(100, moldSim.cleanPercent + 35);
+          playSound('splash');
+          updateMoldUI();
+          if (moldSim.cleanPercent >= 100) {
+            finishMoldWorkshop();
+          }
+        });
+
+        document.getElementById('btnMoldMic').addEventListener('click', function () {
+          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            showToast('當前瀏覽器環境使用模擬吹氣模式，請點擊「吹氣掃走餘粉」！', '麥克風提示');
+            return;
+          }
+          navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+            moldSim.micStream = stream;
+            const ctx = getAudioContext();
+            const source = ctx.createMediaStreamSource(stream);
+            const analyser = ctx.createAnalyser();
+            analyser.fftSize = 256;
+            source.connect(analyser);
+            const dataArr = new Uint8Array(analyser.frequencyBinCount);
+            showToast('🎙️ 麥克風已開啟！請對著手機麥克風吹氣掃走餘粉！', '感應器啟動');
+            if (moldSim.micTimer) clearInterval(moldSim.micTimer);
+            moldSim.micTimer = setInterval(function () {
+              analyser.getByteFrequencyData(dataArr);
+              let sum = 0;
+              for (let i = 0; i < 20; i++) sum += dataArr[i];
+              if (sum / 20 > 45 && moldSim.stage >= 2) {
+                moldSim.stage = 3;
+                moldSim.cleanPercent = Math.min(100, moldSim.cleanPercent + 15);
+                updateMoldUI();
+                if (moldSim.cleanPercent >= 100) {
+                  clearInterval(moldSim.micTimer);
+                  stream.getTracks().forEach(function (t) { t.stop(); });
+                  finishMoldWorkshop();
+                }
+              }
+            }, 120);
+          }).catch(function () {
+            showToast('未能取得麥克風權限，可直接點擊「吹氣掃走餘粉」按鈕完成！', '提示');
+          });
+        });
+
+        document.getElementById('btnMoldReset').addEventListener('click', function () {
+          moldSim.stage = 1;
+          moldSim.pressure = 0;
+          moldSim.knocks = 0;
+          moldSim.cleanPercent = 0;
+          document.getElementById('moldResultMessage').textContent = '已重置木模！請長按「按住蓄力填粉」至 65%–85% 綠色黃金區。';
+          updateMoldUI();
+        });
+
+        // Workshop 3 Events
+        document.getElementById('sliderFluidAngle').addEventListener('input', function (e) {
+          fluidSim.tiltAngle = parseInt(e.target.value, 10);
+          updateFluidUI();
+          drawFluidCanvas();
+        });
+
+        document.getElementById('sliderFluidHeight').addEventListener('input', function (e) {
+          fluidSim.pourHeight = parseInt(e.target.value, 10);
+          updateFluidUI();
+          drawFluidCanvas();
+        });
+
+        document.getElementById('btnEnableGyro').addEventListener('click', function () {
+          if (typeof window.DeviceOrientationEvent !== 'undefined') {
+            window.addEventListener('deviceorientation', function (ev) {
+              if (ev.beta !== null) {
+                const ang = Math.max(15, Math.min(85, Math.round(Math.abs(ev.beta))));
+                fluidSim.tiltAngle = ang;
+                document.getElementById('sliderFluidAngle').value = String(ang);
+                updateFluidUI();
+                drawFluidCanvas();
+              }
+            });
+            showToast('📱 手機陀螺儀感應已啟用！傾斜手機即可調整撞奶角度！', '陀螺儀啟動');
+          } else {
+            showToast('可使用下方「手機傾斜角度」滑桿模擬陀螺儀傾倒！', '提示');
+          }
+        });
+
+        document.getElementById('btnFluidPour').addEventListener('click', function () {
+          fluidSim.poured = true;
+          fluidSim.spoonTested = false;
+          fluidSim.pouredTemp = fluidSim.milkTemp;
+          playSound('splash');
+          const tempOk = fluidSim.pouredTemp >= 72 && fluidSim.pouredTemp <= 78;
+          const angleOk = fluidSim.tiltAngle >= 45 && fluidSim.tiltAngle <= 68;
+          const heightOk = fluidSim.pourHeight >= 20 && fluidSim.pourHeight <= 30;
+          fluidSim.coagulated = tempOk && angleOk && heightOk;
+
+          document.getElementById('fluidResultMessage').textContent =
+            '🫗 已於 ' + fluidSim.pouredTemp.toFixed(1) + '°C（傾角 ' + fluidSim.tiltAngle + '°、高度 ' + fluidSim.pourHeight + 'cm）完成高處撞奶！請點擊「進行湯匙浮面測試」檢驗凝結成果！';
+          drawFluidCanvas();
+        });
+
+        document.getElementById('btnFluidSpoonTest').addEventListener('click', function () {
+          if (!fluidSim.poured) {
+            showToast('請先點擊「立即高處撞奶！」將水牛奶撞入薑汁碗中！', '操作提示');
+            return;
+          }
+          fluidSim.spoonTested = true;
+          const tempDiff = Math.abs(fluidSim.pouredTemp - 75);
+          fluidSim.spoonFloating = tempDiff <= 3.5 && fluidSim.tiltAngle >= 42 && fluidSim.pourHeight >= 18;
+
+          let stars = 1;
+          let msg = '';
+          if (fluidSim.spoonFloating) {
+            stars = 3;
+            msg = '🎉 【三星撞奶宗師！】你在黃金 ' + fluidSim.pouredTemp.toFixed(1) + '°C 高處撞奶，薑汁蛋白酶與酪蛋白瞬間凝結成嫩滑膏體，瓷湯匙穩穩浮於表面不沉！';
+            playSound('success');
+            showToast('流體撞擊坊三星通關！湯匙成功浮於薑撞奶表面！', '三星達成');
+          } else if (tempDiff <= 6.5) {
+            stars = 2;
+            msg = '👍 【二星進階匠人！】撞奶溫度為 ' + fluidSim.pouredTemp.toFixed(1) + '°C，已有半凝結狀態。若在 72°C–78°C 之間且保持 20–30cm 高度撞入，湯匙即可完美浮起！';
+            playSound('click');
+          } else {
+            stars = 1;
+            msg = '💦 【凝結失敗・湯匙沉底！】撞奶時溫度為 ' + fluidSim.pouredTemp.toFixed(1) + '°C（偏離黃金 75°C），蛋白酶未能有效催化凝乳。請點擊「重新煮沸至 92°C」再試一次！';
+            playSound('knock');
+          }
+
+          if (stars > appState.workshopStars.fluid) {
+            appState.workshopStars.fluid = stars;
+            updateHeaderScore();
+          }
+          document.getElementById('fluidStarsText').textContent = '★'.repeat(stars) + '☆'.repeat(3 - stars);
+          document.getElementById('fluidResultMessage').textContent = msg;
+          drawFluidCanvas();
+        });
+
+        document.getElementById('btnFluidReheat').addEventListener('click', function () {
+          fluidSim.milkTemp = 91.5;
+          fluidSim.poured = false;
+          fluidSim.spoonTested = false;
+          playSound('click');
+          document.getElementById('fluidResultMessage').textContent = '🔥 水牛奶已重新加熱至 91.5°C！請待溫度降至 72°C–78°C 綠色黃金區時立即撞奶！';
+          updateFluidUI();
+          drawFluidCanvas();
+        });
+
+        // Workshop 4 Events
+        document.getElementById('btnPastrySubTart').addEventListener('click', function () {
+          pastrySim.subMode = 'tart';
+          document.getElementById('pastryControlsTart').className = 'grid grid-cols-2 sm:grid-cols-4 gap-2';
+          document.getElementById('pastryControlsJiandui').className = 'hidden grid-cols-3 gap-2';
+          document.getElementById('btnPastrySubTart').className = 'px-2.5 py-1 rounded text-xs font-bold bg-amber-800 text-white transition';
+          document.getElementById('btnPastrySubJiandui').className = 'px-2.5 py-1 rounded text-xs font-bold text-amber-900 hover:bg-amber-200 transition';
+          drawPastryCanvas();
+        });
+
+        document.getElementById('btnPastrySubJiandui').addEventListener('click', function () {
+          pastrySim.subMode = 'jiandui';
+          document.getElementById('pastryControlsTart').className = 'hidden grid-cols-2 sm:grid-cols-4 gap-2';
+          document.getElementById('pastryControlsJiandui').className = 'grid grid-cols-3 gap-2';
+          document.getElementById('btnPastrySubJiandui').className = 'px-2.5 py-1 rounded text-xs font-bold bg-amber-800 text-white transition';
+          document.getElementById('btnPastrySubTart').className = 'px-2.5 py-1 rounded text-xs font-bold text-amber-900 hover:bg-amber-200 transition';
+          drawPastryCanvas();
+        });
+
+        document.getElementById('sliderPastryTemp').addEventListener('input', function (e) {
+          pastrySim.temp = parseInt(e.target.value, 10);
+          document.getElementById('labelPastryTemp').textContent = pastrySim.temp + '°C';
+          document.getElementById('pastryHeatBadge').textContent = '🔥 爐溫 / 油溫：' + pastrySim.temp + '°C';
+        });
+
+        document.getElementById('btnFoldLeft').addEventListener('click', function () {
+          if (pastrySim.turnsCompleted >= 4) return;
+          pastrySim.stepInTurn = 1;
+          playSound('click');
+          updatePastryUI();
+        });
+
+        document.getElementById('btnFoldRight').addEventListener('click', function () {
+          if (pastrySim.turnsCompleted >= 4) return;
+          pastrySim.stepInTurn = 2;
+          playSound('click');
+          updatePastryUI();
+        });
+
+        document.getElementById('btnRotate90').addEventListener('click', function () {
+          if (pastrySim.turnsCompleted < 4) {
+            pastrySim.turnsCompleted++;
+            pastrySim.layers = 2 * Math.pow(3, pastrySim.turnsCompleted);
+            pastrySim.stepInTurn = 0;
+            playSound('knock');
+            updatePastryUI();
+          }
+        });
+
+        document.getElementById('btnBakeTart').addEventListener('click', function () {
+          if (pastrySim.turnsCompleted === 0) {
+            pastrySim.turnsCompleted = 4;
+            pastrySim.layers = 162;
+          }
+          pastrySim.baked = true;
+          const stars = pastrySim.turnsCompleted >= 4 ? 3 : 2;
+          if (stars > appState.workshopStars.pastry) {
+            appState.workshopStars.pastry = stars;
+            updateHeaderScore();
+          }
+          playSound('success');
+          document.getElementById('pastryStarsText').textContent = '★'.repeat(stars) + '☆'.repeat(3 - stars);
+          document.getElementById('pastryResultMessage').textContent =
+            '🎉 【三星千層酥王！】經過「三摺四轉」疊出 ' + pastrySim.layers + ' 層水油酥皮，在 ' + pastrySim.temp + '°C 爐溫下水氣膨脹撐開百層酥皮，港式酥皮蛋撻完美出爐！';
+          showToast('酥皮千層坊三星通關！162 層港式酥皮蛋撻出爐！', '三星達成');
+          updatePastryUI();
+        });
+
+        document.getElementById('btnLadleOil').addEventListener('click', function () {
+          pastrySim.jianduiBastes = Math.min(5, pastrySim.jianduiBastes + 1);
+          pastrySim.jianduiRadius = Math.min(68, 28 + pastrySim.jianduiBastes * 8);
+          playSound('sizzle');
+          if (pastrySim.jianduiBastes >= 5) {
+            appState.workshopStars.pastry = 3;
+            updateHeaderScore();
+            playSound('success');
+            document.getElementById('pastryStarsText').textContent = '★★★';
+            document.getElementById('pastryResultMessage').textContent =
+              '🎉 【煎堆轆轆・金銀滿屋！】透過聽聲辨火候與持續畫圈淋油，東莞煎堆均勻受熱、空心膨脹成金黃酥脆大球！';
+            showToast('東莞煎堆空心膨脹挑戰成功！', '三星達成');
+          }
+          updatePastryUI();
+        });
+
+        document.getElementById('btnListenOil').addEventListener('click', function () {
+          playSound('sizzle');
+          showToast('👂 滋滋聲清脆綿密（油溫 ' + pastrySim.temp + '°C），正是畫圈淋油令煎堆膨脹的最佳火候！', '聽聲辨火候');
+        });
+
+        document.getElementById('btnResetPastry').addEventListener('click', function () {
+          pastrySim.stepInTurn = 0;
+          pastrySim.turnsCompleted = 0;
+          pastrySim.layers = 2;
+          pastrySim.baked = false;
+          pastrySim.jianduiBastes = 0;
+          pastrySim.jianduiRadius = 28;
+          updatePastryUI();
+        });
+
+        // Tab 2 Events
+        document.querySelectorAll('.snack-filter-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            const filter = btn.getAttribute('data-snack-filter');
+            playSound('click');
+            document.querySelectorAll('.snack-filter-btn').forEach(function (b) {
+              const active = b === btn;
+              b.className = active
+                ? 'snack-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-red-800 text-white shadow'
+                : 'snack-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-100 text-stone-800 hover:bg-amber-200';
+            });
+            renderSnacksGrid(filter);
+          });
+        });
+
+        document.getElementById('btnCloseSnackModal').addEventListener('click', function () {
+          document.getElementById('snackModal').classList.add('hidden');
+        });
+
+        document.getElementById('btnModalGoWorkshop').addEventListener('click', function () {
+          document.getElementById('snackModal').classList.add('hidden');
+          switchMainTab('workshops');
+          switchWorkshop(appState.selectedModalWorkshopKey);
+        });
+
+        // Tab 3 Events
+        document.querySelectorAll('.highlight-tab-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            switchHighlightTab(btn.getAttribute('data-highlight-tab'));
+          });
+        });
+
+        ['inputMoldText', 'selectMoldBorder', 'selectMoldPastryType'].forEach(function (id) {
+          document.getElementById(id).addEventListener('input', drawCustomMoldCanvas);
+          document.getElementById(id).addEventListener('change', drawCustomMoldCanvas);
+        });
+
+        document.querySelectorAll('.preset-mold-text').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            document.getElementById('inputMoldText').value = btn.getAttribute('data-preset-text');
+            playSound('click');
+            drawCustomMoldCanvas();
+          });
+        });
+
+        document.getElementById('btnStampCustomMold').addEventListener('click', function () {
+          playSound('knock');
+          stampAnimScale = 0.84;
+          drawCustomMoldCanvas();
+          setTimeout(function () {
+            stampAnimScale = 1.06;
+            drawCustomMoldCanvas();
+            setTimeout(function () {
+              stampAnimScale = 1.0;
+              drawCustomMoldCanvas();
+              showToast('🔨 專屬非遺梨木餅印蓋印完成！', '造模工坊');
+            }, 140);
+          }, 140);
+        });
+
+        document.getElementById('btnDownloadMoldPng').addEventListener('click', function () {
+          const canvas = document.getElementById('canvasCustomMold');
+          const link = document.createElement('a');
+          link.download = 'lingnan_custom_mold.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+          showToast('💾 已下載專屬 3D 梨木餅印設計圖 (PNG)！', '下載成功');
+        });
+
+        document.getElementById('btnShareMoldLeaderboard').addEventListener('click', function () {
+          const text = (document.getElementById('inputMoldText').value || '明信').trim();
+          const borderSel = document.getElementById('selectMoldBorder');
+          const borderText = borderSel.options[borderSel.selectedIndex].text.split('（')[0];
+          const pastrySel = document.getElementById('selectMoldPastryType');
+          const pastryText = pastrySel.options[pastrySel.selectedIndex].text.split('（')[0];
+          const author = (document.getElementById('inputMoldAuthor').value || '香港同學').trim();
+
+          moldLeaderboardData.unshift({
+            text: text,
+            border: borderText,
+            pastry: pastryText,
+            author: author,
+            likes: 1
+          });
+          playSound('success');
+          renderMoldLeaderboard();
+          showToast('🏆 已將「' + text + '」餅印發佈至全港校園排行榜！', '分享成功');
+        });
+
+        document.getElementById('selectARRecipe').addEventListener('change', function (e) {
+          arState.recipeKey = e.target.value;
+          arState.stepIndex = 0;
+          arState.timerRunning = false;
+          if (arState.timerInterval) clearInterval(arState.timerInterval);
+          playSound('click');
+          updateARKitchenUI();
+        });
+
+        document.querySelectorAll('.ar-serving-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            arState.servings = parseInt(btn.getAttribute('data-ar-servings'), 10);
+            playSound('click');
+            document.querySelectorAll('.ar-serving-btn').forEach(function (b) {
+              b.className = b === btn
+                ? 'ar-serving-btn py-1.5 rounded-lg text-xs font-bold bg-red-800 text-white shadow'
+                : 'ar-serving-btn py-1.5 rounded-lg text-xs font-bold bg-amber-200 text-stone-900';
+            });
+            updateARKitchenUI();
+          });
+        });
+
+        document.getElementById('btnARPrevStep').addEventListener('click', function () {
+          if (arState.stepIndex > 0) {
+            arState.stepIndex--;
+            arState.timerRunning = false;
+            if (arState.timerInterval) clearInterval(arState.timerInterval);
+            playSound('click');
+            updateARKitchenUI();
+          }
+        });
+
+        document.getElementById('btnARNextStep').addEventListener('click', function () {
+          const recipe = arRecipes[arState.recipeKey];
+          if (arState.stepIndex < recipe.steps.length - 1) {
+            arState.stepIndex++;
+            arState.timerRunning = false;
+            if (arState.timerInterval) clearInterval(arState.timerInterval);
+            playSound('click');
+            updateARKitchenUI();
+          } else {
+            playSound('success');
+            showToast('🎉 恭喜完成「' + recipe.name + '」全部 AR 實戰步驟！快到 AI 大廚拍照評分吧！', '實戰完成');
+          }
+        });
+
+        document.getElementById('btnSpeakARStep').addEventListener('click', function () {
+          const recipe = arRecipes[arState.recipeKey];
+          const step = recipe.steps[arState.stepIndex];
+          if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utter = new SpeechSynthesisUtterance(step.title + '。' + step.desc);
+            utter.lang = 'zh-HK';
+            window.speechSynthesis.speak(utter);
+          }
+          showToast('🔊 語音導航播報中：' + step.title, '智能語音');
+        });
+
+        document.getElementById('btnToggleARCamera').addEventListener('click', function () {
+          const video = document.getElementById('arCameraVideo');
+          if (arState.cameraActive) {
+            if (arState.cameraStream) {
+              arState.cameraStream.getTracks().forEach(function (t) { t.stop(); });
+            }
+            arState.cameraActive = false;
+            video.classList.add('hidden');
+            document.getElementById('btnToggleARCamera').textContent = '📷 開啟真實手機鏡頭 AR';
+            drawARKitchenCanvas();
+            return;
+          }
+          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            showToast('當前環境已自動啟用「模擬 3D 廚房桌面 AR 投射視角」！', 'AR 模式');
+            return;
+          }
+          navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }).then(function (stream) {
+            arState.cameraStream = stream;
+            arState.cameraActive = true;
+            video.srcObject = stream;
+            video.classList.remove('hidden');
+            document.getElementById('btnToggleARCamera').textContent = '🛑 關閉鏡頭（返回模擬桌面）';
+            drawARKitchenCanvas();
+          }).catch(function () {
+            showToast('使用內置高擬真「廚房桌面 AR 比例投射視角」！', 'AR 模式');
+          });
+        });
+
+        document.getElementById('btnARTimerToggle').addEventListener('click', function () {
+          if (arState.timerRunning) {
+            arState.timerRunning = false;
+            if (arState.timerInterval) clearInterval(arState.timerInterval);
+            document.getElementById('btnARTimerToggle').textContent = '▶️ 繼續計時';
+          } else {
+            arState.timerRunning = true;
+            document.getElementById('btnARTimerToggle').textContent = '⏸️ 暫停計時';
+            arState.timerInterval = setInterval(function () {
+              if (arState.timerRemaining > 0) {
+                arState.timerRemaining--;
+                renderARTimerText();
+              } else {
+                clearInterval(arState.timerInterval);
+                arState.timerRunning = false;
+                document.getElementById('btnARTimerToggle').textContent = '▶️ 啟動計時';
+                playSound('success');
+                showToast('⏰ 步驟計時完成！請進行下一步驟！', '計時提醒');
+              }
+            }, 1000);
+          }
+        });
+
+        document.getElementById('btnARTimerReset').addEventListener('click', function () {
+          arState.timerRunning = false;
+          if (arState.timerInterval) clearInterval(arState.timerInterval);
+          const recipe = arRecipes[arState.recipeKey];
+          arState.timerRemaining = recipe.steps[arState.stepIndex].timerSec;
+          document.getElementById('btnARTimerToggle').textContent = '▶️ 啟動計時';
+          renderARTimerText();
+        });
+
+        document.querySelectorAll('.ai-sample-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            uploadedCustomImage = null;
+            const key = btn.getAttribute('data-ai-sample');
+            playSound('click');
+            document.querySelectorAll('.ai-sample-btn').forEach(function (b) {
+              b.className = b === btn
+                ? 'ai-sample-btn p-2 rounded-lg text-xs font-bold bg-amber-800 text-white shadow text-center'
+                : 'ai-sample-btn p-2 rounded-lg text-xs font-bold bg-white border border-amber-300 text-stone-800 hover:bg-amber-100 text-center';
+            });
+            renderAIChefAssessment(key);
+          });
+        });
+
+        document.getElementById('inputAIChefPhoto').addEventListener('change', function (e) {
+          const file = e.target.files && e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = function (ev) {
+            const img = new Image();
+            img.onload = function () {
+              uploadedCustomImage = img;
+              playSound('success');
+              renderAIChefAssessment('lunjiao_good');
+              showToast('📸 照片上傳成功！AI 大廚已完成氣孔與色澤視覺識別！', 'AI 評分');
+            };
+            img.src = ev.target.result;
+          };
+          reader.readAsDataURL(file);
+        });
+
+        document.getElementById('btnRunAIScan').addEventListener('click', function () {
+          playSound('success');
+          drawAIChefScanCanvas();
+          showToast('🔍 AI 視覺特徵分析完成！已更新氣孔分佈與完整度評分！', 'AI 視覺');
+        });
+
+        ['inputCertName', 'inputCertSchool'].forEach(function (id) {
+          document.getElementById(id).addEventListener('input', drawCertificateCanvas);
+        });
+
+        document.getElementById('btnDownloadCertificate').addEventListener('click', function () {
+          const canvas = document.getElementById('canvasCertificate');
+          const link = document.createElement('a');
+          link.download = 'lingnan_heritage_certificate.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+          playSound('success');
+          showToast('🎓 已下載《嶺南非遺小吃傳承人電子證書》！', '證書下載');
+        });
+
+        // Tab 4 Events
+        document.querySelectorAll('.city-node-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            selectedCityKey = btn.getAttribute('data-city-node');
+            const info = cityNodes[selectedCityKey];
+            playSound('click');
+            document.querySelectorAll('.city-node-btn').forEach(function (b) {
+              b.className = b === btn
+                ? 'city-node-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-red-800 text-white shadow'
+                : 'city-node-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-100 text-stone-800 hover:bg-amber-200';
+            });
+            document.getElementById('cityDetailTitle').textContent = info.title;
+            document.getElementById('cityDetailHistory').textContent = info.history;
+            document.getElementById('cityDetailSnacks').textContent = info.snacks;
+            drawLineageMapCanvas();
+          });
+        });
+
+        document.querySelectorAll('.practice-check').forEach(function (chk) {
+          chk.addEventListener('change', function () {
+            const total = document.querySelectorAll('.practice-check').length;
+            const done = document.querySelectorAll('.practice-check:checked').length;
+            document.getElementById('practiceCheckCount').textContent = '已完成 ' + done + '/' + total;
+            if (done === total) {
+              playSound('success');
+              showToast('🌟 恭喜完成所有「動手傳承」家庭與考察實踐行動！', '文化傳承');
+            }
+          });
+        });
+
+        // Tab 5 Events
+        document.getElementById('btnCopyGitCommands').addEventListener('click', function () {
+          const text = document.getElementById('gitCommandsBlock').textContent;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).catch(function () {});
+          } else {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(ta);
+          }
+          playSound('click');
+          showToast('📋 已複製 Git 部署指令！可直接貼到終端機推送至 GitHub！', '複製成功');
+        });
+
+        drawFermentCanvas();
+        drawMoldCanvas();
+        drawFluidCanvas();
+        drawPastryCanvas();
+        drawCustomMoldCanvas();
+        drawARKitchenCanvas();
+        drawAIChefScanCanvas();
+        drawCertificateCanvas();
+        drawLineageMapCanvas();
+
+        window.addEventListener('resize', function () {
+          drawFermentCanvas();
+          drawMoldCanvas();
+          drawFluidCanvas();
+          drawPastryCanvas();
+          drawCustomMoldCanvas();
+          drawARKitchenCanvas();
+          drawAIChefScanCanvas();
+          drawLineageMapCanvas();
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
